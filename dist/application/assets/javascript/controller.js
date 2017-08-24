@@ -481,7 +481,9 @@
 
             this.undo = function(dontApply) {
                 if (back.length) {
-                    hideNamesInput(activeMarker)
+                    if (activeMarker) {
+                        hideNamesInput(activeMarker)
+                    }
                     
                     var lastAction = back[back.length-1];
                     switch (lastAction.action) {
