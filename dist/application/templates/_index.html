@@ -1,0 +1,147 @@
+<div id="LAM_Map"></div>
+<div class="settings-wrap top left">
+    <div class="settings-ui" ng-click="setZoom(true)"><i class="fa fa-plus"></i></div>
+    <div class="settings-ui" ng-click="setZoom()"><i class="fa fa-minus"></i></div>
+    <div class="undo-redo-wrap" ng-click="undo()">
+        <i class="fa fa-reply"></i>
+        <div class="helper">Шаг назад</div>
+    </div>
+    <!--<div class="undo-redo-wrap" ng-click="redo()"><i class="fa fa-share"></i></div>-->
+    <div class="settings-type">
+        <div class="linen">
+            <input type="checkbox" id="marker-input" ng-model="enableMarkers" ng-change="enableM(); setToMap()">
+            <div class="checkbox-holder"><!--<i class="fa fa-check"></i>--></div>
+            <label for="marker-input">Маркеры</label>
+        </div>
+        <div class="linen">
+            <input type="checkbox" id="polyline-input" ng-model="enablePolylines" ng-change="enableP(); setToMap()">
+            <div class="checkbox-holder"><!--<i class="fa fa-check"></i>--></div>
+            <label for="polyline-input">Линии</label>
+        </div>
+        <div class="linen">
+            <input type="checkbox" id="polygon-input" ng-model="enablePolygons" ng-change="enableG(); setToMap()" disabled>
+            <div class="checkbox-holder"><!--<i class="fa fa-check"></i>--></div>
+            <label for="polygon-input">Полигоны<sup style="color: red;">**</sup></label>
+        </div>
+    </div>
+    <div class="settings-config">
+        <div class="linen">
+            <input type="checkbox" id="draggable-input" ng-model="disableDrag" ng-change="toggleDraggable()">
+            <div class="checkbox-holder"><i class="fa fa-check"></i></div>
+            <label for="draggable-input">Зафиксировать карту</label>
+        </div>
+    </div>
+    <div class="settings-config" ng-show="selectedIndex && enablePolylines">
+        <div class="new-button" ng-click="newPolyline()">Новая линия</div>
+        <div class="polyline-number">Выбрать порядковый номер линии, для редактирования</div>
+        <select  ng-model="selectedIndex" ng-change="selectPolyline()">
+            <option ng-repeat="(key, value) in polygonsData" ng-selected="selectedIndex == $index+1">{{key+1}}</option>
+        </select>
+    </div>
+    <div class="save-button" ng-click="save()" ng-show="selectedIndex || gotMarkers">Сохранить координаты</div>
+    <div class="delete-button" ng-show="gotMarkers && enableMarkers" ng-click="deleteMarkers()">Удалить маркеры</div>
+    <div class="delete-button" ng-show="selectedIndex && enablePolylines" ng-click="deletePolylines()">Удалить линии</div>
+</div>
+
+<div class="after-menu-wrapper">
+
+    <div class="after-menu-button shortcuts-caller" ng-click="shortcutsToggled = !shortcutsToggled; instructionsToggled = false">
+        <i class="fa fa-keyboard-o"></i>
+        <div class="helper">Шорткаты</div>
+    </div>
+    <div class="instructions-holder" ng-show="shortcutsToggled" ng-click="shortcutsToggled = false">
+        <div class="shortcuts-wrap" ng-show="shortcutsToggled" ng-click="$event.stopPropagation()">
+            <i class="fa fa-times" ng-click="shortcutsToggled = !shortcutsToggled"></i>
+            <div class="shortcut-title">Шорткаты</div>
+            <!--<div class="shortcut-caption">Режим маркеров</div>-->
+            <!--<div class="shortcut-holder single">-->
+                <!--<div class="shortcut-button">Z</div>-->
+                <!--<div class="shortcut-label">Удалить последний добавленный маркер</div>-->
+            <!--</div>-->
+            <div class="shortcut-caption">Режим линий</div>
+            <div class="shortcut-holder">
+                <div class="shortcut-button">N</div>
+                <div class="shortcut-label">Создать новую линию</div>
+            </div>
+            <div class="shortcut-caption">Все режимы</div>
+            <div class="shortcut-holder">
+                <div class="shortcut-button">M</div>
+                <div class="shortcut-label">Режим<br> маркеров</div>
+            </div>
+            <div class="shortcut-holder">
+                <div class="shortcut-button">P</div>
+                <div class="shortcut-label">Режим линий</div>
+            </div>
+            <div class="shortcut-holder">
+                <div class="shortcut-button">S</div>
+                <div class="shortcut-label">Сохранить координаты в буфер</div>
+            </div>
+            <div class="shortcut-holder">
+                <div class="shortcut-button">F</div>
+                <div class="shortcut-label">Зафиксировать карту</div>
+            </div>
+            <div class="shortcut-holder single">
+                <div class="shortcut-button">Z</div>
+                <div class="shortcut-label">Шаг назад</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="after-menu-button" ng-click="instructionsToggled = !instructionsToggled; shortcutsToggled = false">
+        <i class="fa fa-info"></i>
+        <div class="helper">Инструкция</div>
+    </div>
+    <div class="instructions-holder" ng-show="instructionsToggled" ng-click="instructionsToggled = false">
+        <div class="instructions-wrap" ng-click="$event.stopPropagation()">
+            <i class="fa fa-times" ng-click="instructionsToggled = !instructionsToggled"></i>
+            <div class="shortcut-title">Инструкция</div>
+            <div class="instructions-text">Изучите шорткаты, для более удобного использования.</div>
+            <div class="instructions-text">Взаимодествие с картой происходит в разных режимах. Это режимы линий и маркеров.</div>
+            <div class="instructions-text">
+                Чтобы построить линию или поставить маркер, в соответствии от выбранного
+                режима, необходимо кликнуть на карту или вписать адрес в адресную строку и кликнуть на кнопку маркера справа от поля ввода.
+            </div>
+            <div class="instructions-text">Маркеры и точки излома линий можно перетаскивать.</div>
+            <div class="instructions-text">
+                Обратить внимание! Порядковые номера линий пересчитываются после удаления одной из линий.
+            </div>
+            <div class="instructions-text">
+                Когда линии полностью готовы и/или все маркеры выставлены, необходимо сохранить их. Координаты сохраняются в буфер обмена<sup>*</sup>.
+            </div>
+            <div class="instructions-text">
+                После сохранения координат, необходимо вставить данные из буфера обмена в текстовый редактор (<b>CTRL+V</b>)
+                или вставить напрямую в письмо/слек/любой чатик на хайпе и передать эти "каракули" разработчикам.
+            </div>
+            <div class="instructions-text sup">
+                <sup>*</sup> Буфер обмена это то, что происходит при нажатии <b>CTRL+C</b><br>
+                <sup>**</sup> Полигоны находятся в процессе разработки
+            </div>
+        </div>
+    </div>
+
+    <div class="searchbox-wrapper">
+        <input id="pac-input" class="controls" type="text" placeholder="Адрес">
+        <div class="setter-button" ng-click="setPinFromAddress()">
+            <i class="fa fa-map-marker"></i>
+            <div class="helper">Поставить <span ng-show="enableMarkers">маркер</span><span ng-show="enablePolylines">линию</span> по адресу</div>
+        </div>
+    </div>
+
+    <div class="after-menu-button" ng-click="setCenterFromAddress()">
+        <i class="fa fa-eye"></i>
+        <div class="helper">Показать место на карте</div>
+    </div>
+
+</div>
+
+<div class="action-window-wrapper">
+    <div class="action-text"></div>
+</div>
+
+<div class="names-wrap" onclick="$('.names-window, .names-wrap').removeClass('shown');">
+    <div class="names-window" onclick="event.stopPropagation();">
+        <i class="fa fa-times" onclick="$('.names-window, .names-wrap').removeClass('shown');"></i>
+        <input id="markerInp" type="text" value="" placeholder="Введи текст">
+        <div class="names-save-button">Сохранить</div>
+    </div>
+</div>

@@ -1,0 +1,599 @@
+/* MAIN STYLES */
+* {
+	padding: 0;
+	margin: 0;
+}
+body, html {
+	padding: 0;
+	margin: 0 auto;
+	box-sizing: border-box;
+	height: 100%;
+	font-family: "Proxima Nova", sans-serif;
+	min-width: 1020px;
+	max-width: 1920px;
+}
+a {
+	color: inherit;
+	text-decoration: none;
+}
+body {
+	&.no-scroll {
+		overflow: hidden;
+	}
+}
+
+.antialiasing {
+	-webkit-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+}
+.clearfix:before,
+.clearfix:after {
+	content: "\0020";
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0
+}
+.clearfix:after {
+	clear: both
+}
+
+.clearfix {
+	zoom: 1;
+}
+
+* html .clearfix {
+	height: 1%
+}
+
+.clearfix {
+	display: block
+}
+
+//
+
+@font-face {
+	font-family: "Proxima Nova";
+	src: url("../fonts/proximanova-reg/proximanova-reg.woff");
+}
+@font-face {
+	font-family: "Proxima Nova Bold";
+	src: url("../fonts/proximanova-bold/proximanova-bold.woff");
+}
+
+#LAM_Map {
+	width: 100%;
+	height: 100vh;
+	position: relative;
+}
+.settings-wrap {
+	position: absolute;
+	z-index: 5;
+	font-size: 0;
+	&.left {
+		left: 20px;
+	}
+	&.right {
+		right: 20px;
+	}
+	&.bottom {
+		bottom: 20px;
+	}
+	&.top {
+		top: 20px;
+	}
+}
+.settings-type, .settings-config {
+	width: 212px;
+	background: #fff;
+	padding: 20px;
+	box-sizing: border-box;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	margin-bottom: 20px;
+	select {
+		display: block;
+		width: 100px;
+		margin: 0 auto;
+	}
+}
+.ui-wrap {
+	width: 212px;
+	text-align: center;
+}
+.settings-ui {
+	width: 38px;
+	height: 38px;
+	border-radius: 38px;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	background: #fff;
+	display: inline-flex;
+	vertical-align: middle;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	&:last-child {
+		margin-right: 0;
+	}
+	i {
+		font-size: 24px;
+		color: #3f3f3f;
+	}
+}
+.linen {
+	margin-bottom: 10px;
+	font-size: 0;
+	&:last-child {
+		margin-bottom: 0;
+	}
+	label {
+		text-transform: uppercase;
+		font-size: 14px;
+		letter-spacing: 1px;
+		font-family: "Proxima Nova Bold", sans-serif;
+		vertical-align: middle;
+		color: #3f3f3f;
+		cursor: pointer;
+	}
+	input {
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		&:checked {
+			+ .checkbox-holder {
+				background: #3f3f3f;
+				i {
+					display: block;
+				}
+			}
+		}
+		&:disabled {
+			cursor: default;
+			+ .checkbox-holder {
+				border: 1px solid #ddd;
+				cursor: default;
+			}
+			~ label {
+				color: #ddd;
+				cursor: default;
+			}
+		}
+		opacity: 0;
+		cursor: pointer;
+	}
+}
+.polyline-number {
+	margin-bottom: 10px;
+	font-size: 14px;
+	line-height: 14px;
+	text-align: center;
+}
+.checkbox-holder {
+	width: 20px;
+	height: 20px;
+	border: 1px solid #3f3f3f;
+	box-shadow: inset 0 0 0 1px #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	vertical-align: middle;
+	box-sizing: border-box;
+	margin-right: 10px;
+	flex: none;
+	background: transparent;
+	transition: background .15s;
+	i {
+		display: none;
+		font-size: 12px;
+		color: #fff;
+		text-align: center;
+	}
+}
+.settings-config {
+	.linen {
+		display: flex;
+		align-items: center;
+	}
+}
+.text-center {
+	text-align: center;
+}
+.undo-redo-wrap {
+	width: 38px;
+	height: 38px;
+	margin-bottom: 20px;
+	margin-right: 20px;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	background: #fff;
+	display: inline-flex;
+	vertical-align: middle;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	i {
+		font-size: 18px;
+		color: #3f3f3f;
+	}
+	&:hover {
+		.helper {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+	.helper {
+		position: absolute;
+		top: 58px;
+		padding: 10px;
+		text-transform: uppercase;
+		font-size: 13px;
+		background: #3f3f3f;
+		color: #fff;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity .25s, transform .35s;
+		transform: translate3d(0, -5px, 0);
+		&:before {
+			content: '';
+			border: 10px solid transparent;
+			border-bottom: 10px solid #3f3f3f;
+			position: absolute;
+			top: -20px;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
+}
+.after-menu-button {
+	width: 38px;
+	height: 38px;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	background: #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	margin-right: 20px;
+	i {
+		font-size: 24px;
+		color: #3f3f3f;
+	}
+	position: relative;
+	&:hover {
+		.helper {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+	.helper {
+		position: absolute;
+		top: 58px;
+		padding: 10px;
+		text-transform: uppercase;
+		font-size: 13px;
+		background: #3f3f3f;
+		color: #fff;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity .25s, transform .35s;
+		transform: translate3d(0, -5px, 0);
+		&:before {
+			content: '';
+			border: 10px solid transparent;
+			border-bottom: 10px solid #3f3f3f;
+			position: absolute;
+			top: -20px;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
+}
+.shortcuts-wrap {
+	position: absolute;
+	width: 330px;
+	left: 250px;;
+	top: 20px;
+	background: #fff;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	padding: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	i {
+		position: absolute;
+		right: 3px;
+		top: 1px;
+		color: #c7c7c7;
+		font-size: 18px;
+		cursor: pointer;
+	}
+}
+.shortcut-holder {
+	display: flex;
+	margin-top: 20px;
+	align-items: center;
+	width: 50%;
+	&.single {
+		width: 100%;
+	}
+}
+.shortcut-button {
+	width: 40px;
+	height: 40px;
+	background: linear-gradient(to bottom, #3a3a3a 0%, #252525 75%, #484848 100%);
+	border-radius: 3px;
+	color: #fff;
+	font-size: 18px;
+	line-height: 18px;
+	padding: 5px;
+	box-sizing: border-box;
+	margin-right: 10px;
+	flex: none;
+}
+.shortcut-label {
+	font-size: 14px;
+	line-height: 14px;
+}
+.shortcut-title {
+	width: 100%;
+	font-family: "Proxima Nova Bold", sans-serif;
+	text-transform: uppercase;
+	font-size: 18px;
+	line-height: 14px;
+}
+.shortcut-caption {
+	width: 100%;
+	margin-top: 28px;
+	font-size: 16px;
+	line-height: 14px;
+	padding-bottom: 16px;
+	border-bottom: 2px solid #ccc;
+}
+.save-button, .delete-button {
+	font-size: 14px;
+	width: 212px;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	padding: 10px 6px;
+	background: #3f3f3f;
+	color: #fff;
+	font-family: "Proxima Nova Bold", sans-serif;
+	text-transform: uppercase;
+	box-sizing: border-box;
+	text-align: center;
+	cursor: pointer;
+	transition: background .35s;
+	&:hover {
+		background: #626262;
+	}
+}
+.delete-button {
+	background: darkred;
+	margin-top: 20px;
+	&:hover {
+		background: red;
+	}
+}
+.new-button {
+	font-size: 14px;
+	width: 100%;
+	padding: 10px 6px;
+	background: #3f3f3f;
+	color: #fff;
+	cursor: pointer;
+	margin-bottom: 20px;
+	font-family: "Proxima Nova Bold", sans-serif;
+	text-transform: uppercase;
+	box-sizing: border-box;
+	text-align: center;
+	transition: background .35s;
+	&:hover {
+		background: #626262;
+	}
+}
+.action-window-wrapper {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	background: #3f3f3f;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	padding: 20px;
+	width: 250px;
+	box-sizing: border-box;
+	transition: opacity .5s;
+	opacity: 0;
+	pointer-events: none;
+	color: #fff;
+	&.shown {
+		opacity: 1;
+	}
+}
+
+.shortcut-title {
+	margin-bottom: 10px;
+}
+
+.instructions-text {
+	margin-top: 10px;
+	line-height: 22px;
+	font-size: 16px;
+	sup {
+		font-size: 17px;
+		color: red;
+		line-height: 0;
+		position: relative;
+		top: 5px;
+	}
+	&.sup {
+		font-size: 12px;
+		padding-top: 10px;
+		border-top: 1px solid #6f6f6f;
+	}
+}
+
+.instructions-holder {
+	height: 100vh;
+	top: 0;
+	width: 100vw;
+	overflow-y: scroll;
+	position: fixed;
+	left: 0;
+	z-index: 5;
+}
+
+.instructions-wrap {
+	position: absolute;
+	left: 308px;
+	width: 330px;
+	padding: 20px;
+	margin-top: 20px;
+	margin-bottom: 40px;
+	background: #fff;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	i {
+		position: absolute;
+		right: 3px;
+		top: 1px;
+		color: #c7c7c7;
+		font-size: 18px;
+		cursor: pointer;
+	}
+}
+.searchbox-wrapper {
+	height: 38px;
+	width: calc(100vw - 488px);
+	max-width: 600px;
+	background: #fff;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	display: flex;
+	margin-right: 20px;
+	input {
+		width: calc(100% - 38px);
+		height: 100%;
+		border: none;
+		outline: none;
+		font-size: 16px;
+		color: #3f3f3f;
+		padding: 0 20px;
+		box-sizing: border-box;
+		font-family: "Proxima Nova", sans-serif;
+		flex: none;
+	}
+}
+.setter-button {
+	width: 38px;
+	height: 100%;
+	background: #3f3f3f;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	i {
+		font-size: 18px;
+		color: #fff;
+	}
+	position: relative;
+	&:hover {
+		.helper {
+			opacity: 1;
+			transform: translate3d(0, 0, 0);
+		}
+	}
+	.helper {
+		position: absolute;
+		top: 58px;
+		padding: 10px;
+		text-transform: uppercase;
+		font-size: 13px;
+		background: #3f3f3f;
+		color: #fff;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity .25s, transform .35s;
+		transform: translate3d(0, -5px, 0);
+		&:before {
+			content: '';
+			border: 10px solid transparent;
+			border-bottom: 10px solid #3f3f3f;
+			position: absolute;
+			top: -20px;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
+}
+
+.after-menu-wrapper {
+	position: absolute;
+	left: 250px;
+	top: 20px;
+	display: flex;
+	z-index: 5;
+}
+
+.names-wrap {
+	position: absolute;
+	z-index: 6;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	&.shown {
+		pointer-events: all;
+	}
+}
+
+.names-window {
+	position: absolute;
+	left: 366px;
+	top: 76px;
+	width: 200px;
+	padding: 20px;
+	box-sizing: border-box;
+	background: #fff;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	transition: opacity .35s;
+	opacity: 0;
+	i {
+		position: absolute;
+		right: 3px;
+		top: 1px;
+		color: #c7c7c7;
+		font-size: 18px;
+		cursor: pointer;
+	}
+	&.shown {
+		opacity: 1;
+	}
+	input {
+		width: 100%;
+		height: 30px;
+		box-sizing: border-box;
+		border: none;
+		font-family: "Proxima Nova", sans-serif;
+		color: #1f1f1f;
+		font-size: 14px;
+		border-bottom: 1px solid #1f1f1f;
+		outline: none;
+		flex: none;
+	}
+	.names-save-button {
+		padding: 6px 12px;
+		background: #3f3f3f;
+		color: #fff;
+		font-size: 14px;
+		cursor: pointer;
+		width: 100%;
+		text-align: center;
+		margin-top: 20px;
+		box-sizing: border-box;
+		font-family: "Proxima Nova Bold", sans-serif;
+		text-transform: uppercase;
+	}
+}
