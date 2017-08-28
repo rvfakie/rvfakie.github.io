@@ -3,7 +3,41 @@
     // ['angular-toArrayFilter','ui.bootstrap','ui.mask', 'ui.router', 'ngDropdowns', 'ngAnimate']
     var app = angular.module('applicationModule', ['ui.router']);
 
-    app.service('Map', function($q, $http, $rootScope) {
+    app.run(function($rootScope) {
+        $(window).on('beforeunload pagehide', function() {
+            $rootScope.$broadcast('saveState');
+        });
+    });
+
+    app.service('dataService', function($rootScope) {
+
+        var data = {
+            content: []
+        };
+
+        function saveState() {
+            window.localStorage.GMapsData = angular.toJson(data.content);
+        }
+        function restoreState() {
+            data.content = angular.fromJson(window.localStorage.GMapsData);
+            if (data.content.length) {
+                // After ctrlLoad (this means that Map is also loaded)
+                $rootScope.$on('indexAllSet', function() {
+                    $rootScope.$broadcast('restoreState');
+                });
+            }
+        }
+
+        $rootScope.$on("saveState", saveState);
+
+        if (window.localStorage.GMapsData) {
+            restoreState();
+        }
+
+        return data;
+    });
+
+    app.service('Map', function($q, $http, $rootScope, dataService) {
         this.init = function(mapId) {
 
             var polylinesArray = [], markersArray = [],
@@ -789,6 +823,52 @@
                 }
             }
 
+            this.setLocalStorage = function() {
+                var mkArray = [];
+                var plArray = [];
+                var src = '';
+
+                src += '[';
+                if (markersArray.length) {
+                    for (var mk in markersArray) {
+                        mkArray.push({
+                            position: {
+                                lat: markersArray[mk].position.lat(),
+                                lng: markersArray[mk].position.lng()
+                            },
+                            text: markersArray[mk].text
+                        });
+                    }
+                    src += '{"markers":';
+                    src += JSON.stringify(mkArray);
+                    src +='}';
+                }
+                if (polylinesArray.length) {
+                    for (var i = 0; i < polylinesArray.length; i++) {
+                        var l = polylinesArray[i].latLngs.b[0].b;
+                        plArray.push(l)
+                    }
+                    if (mkArray.length) {
+                        src +=',{"polylines":';
+                    } else {
+                        src +='{"polylines":';
+                    }
+                    src +=JSON.stringify(plArray);
+                    src +='}';
+                }
+                src += ']';
+                return src;
+            };
+
+            // Saving state before unload
+            $rootScope.$on('saveState', function() {
+                dataService.content = self.setLocalStorage();
+            });
+
+            // Working after indexCtrl load
+            $rootScope.$on('restoreState', function() {
+                self.load(JSON.parse(dataService.content));
+            });
 
             //remove all polygons func
             google.maps.Polygon.prototype.clearPolygons = function() {
@@ -867,7 +947,6 @@
         $scope.disableDrag = false;
         $scope.shortcutsToggled = false;
         $scope.instructionsToggled = false;
-
         $scope.gotMarkers = false;
 
         var addressInput = document.getElementById('pac-input');
@@ -995,6 +1074,8 @@
             }
             $scope.$apply();
         });
+
+        $rootScope.$broadcast('indexAllSet');
     })
 
 })(angular);
