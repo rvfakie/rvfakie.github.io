@@ -138,6 +138,11 @@
                     }
                 });
                 markersArray.push(this.marker);
+
+                if (!markerLogic) {
+                    this.marker.setOptions({draggable: false, clickable: false});
+                }
+
                 $rootScope.$broadcast('setMarker', {
                     quantity: markersArray.length,
                     dontApply: dontApply
