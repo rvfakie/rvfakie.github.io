@@ -31,6 +31,15 @@
             <label for="draggable-input">Зафиксировать карту</label>
         </div>
     </div>
+    <div class="upload-config-wrapper">
+        <div class="save-button" ng-click="showUpload = true">Загрузить данные</div>
+        <div class="settings-config upload-config" ng-show="showUpload">
+            <div class="upload-wrap"ng-click="showUpload = false"></div>
+            <i class="fa fa-times" ng-click="showUpload = false"></i>
+            <textarea id="uploadData" ng-model="uploadData"></textarea>
+            <div class="upload-data-button" ng-click="load(uploadData)">Загрузить</div>
+        </div>
+    </div>
     <div class="settings-config" ng-show="selectedIndex && enablePolylines">
         <div class="new-button" ng-click="newPolyline()">Новая линия</div>
         <div class="polyline-number">Выбрать порядковый номер линии, для редактирования</div>

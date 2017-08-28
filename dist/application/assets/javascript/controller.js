@@ -48,7 +48,7 @@
             var searchBox = new google.maps.places.SearchBox(input);
             //this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
 
-            this.addPolyline = function() {
+            this.addPolyline = function(load) {
                 this.polyline = new google.maps.Polyline({
                     path: emptyArray,
                     geodesic: true,
@@ -79,14 +79,15 @@
                 });
 
                 $rootScope.$broadcast('setPolyline', {
-                    quantity: index
+                    quantity: index,
+                    dontApply: load
                 });
 
                 ga('set', 'page', 'set new polyline');
                 ga('send', 'pageview');
             };
 
-            this.addMarker = function(latLng) {
+            this.addMarker = function(latLng, dontApply, text) {
 
                 this.marker = new google.maps.Marker({
                     position: latLng,
@@ -94,7 +95,7 @@
                     animation: google.maps.Animation.DROP,
                     clickable: true,
                     draggable: true,
-                    text: null,
+                    text: text,
                     icon: {
                         url: 'application/assets/images/triangle.svg',
                         scaledSize: new google.maps.Size(30, 38),
@@ -104,7 +105,8 @@
                 });
                 markersArray.push(this.marker);
                 $rootScope.$broadcast('setMarker', {
-                    quantity: markersArray.length
+                    quantity: markersArray.length,
+                    dontApply: dontApply
                 });
 
                 google.maps.event.addListener(this.marker, 'click', function () {
@@ -160,7 +162,15 @@
                     }
                 });
 
-                polylineMarkersArray[index-1].push(this.marker);
+                if (markerLogic) {
+                    this.marker.setOptions({draggable: false});
+                }
+
+                if (polylineMarkersArray[index-1]) {
+                    polylineMarkersArray[index-1].push(this.marker);
+                } else {
+                    polylineMarkersArray.push([this.marker]);
+                }
 
                 var markerIndex = polyline.getPath().length;
 
@@ -192,32 +202,32 @@
 
                 //TODO set draggable false if markerLogic
 
-                // google.maps.event.addListener(this.marker, 'click', function(event) {
-                //     console.log(polyline)
-                // });
-
                 var len = polyline.latLngs.b[0].b.length;
 
                 if (len < 2) {
                     this.window = new google.maps.InfoWindow({
                         content: '<div class="wndw" onclick="console.log('+ index +')">'+ index.toString() +'</div>'
                     });
-                    polylineBubblesArray[index-1].push(this.window);
+                    if (polylineBubblesArray[index-1]) {
+                        polylineBubblesArray[index-1].push(this.window);
+                    } else {
+                        polylineBubblesArray.push([this.window]);
+                    }
 
-                    this.window.open(this.map, this.marker);
+                    if (!markerLogic) {
+                        this.window.open(this.map, this.marker);
+                    }
                 }
 
-                back.push(
-                    {
-                        action: 'continuePolyline',
-                        data: {
-                            polyline: polyline,
-                            marker: that.marker,
-                            index: index-1,
-                            window: this.window
-                        }
+                back.push({
+                    action: 'continuePolyline',
+                    data: {
+                        polyline: polyline,
+                        marker: that.marker,
+                        index: index-1,
+                        window: this.window
                     }
-                );
+                });
 
             };
 
@@ -226,11 +236,19 @@
                 if (lastPolyline !== polylinesArray[index - 1]) {
 
                     lastPolyline = polylinesArray[index - 1];
-                    self.setPolylineSelectedColor(lastPolyline);
+
+                    if (!markerLogic) {
+                        self.setPolylineSelectedColor(lastPolyline);
+                    }
 
                 }
 
-                lastPolyline.getPath().push(latLng);
+                if (typeof latLng.lat === "number" && typeof latLng.lng === "number") {
+                    var pos = new google.maps.LatLng(latLng.lat, latLng.lng);
+                    lastPolyline.getPath().push(pos);
+                } else {
+                    lastPolyline.getPath().push(latLng);
+                }
 
                 self.addPolylineMarker(lastPolyline, latLng);
 
@@ -350,7 +368,7 @@
 
                     else {
                         if (newPolyline) {
-                            self.addPolyline(event.latLng);
+                            self.addPolyline();
                             newPolyline = false;
                             polylineMarkersArray.push([]);
                             polylineBubblesArray.push([]);
@@ -548,8 +566,11 @@
                     var dummy = document.createElement("input");
                     document.body.appendChild(dummy);
                     dummy.setAttribute("id", "dummy_id");
+                    document.getElementById("dummy_id").value+='[';
+                    var mkArray = [];
+                    var plArray = [];
+
                     if (markersArray.length) {
-                        var mkArray = [];
                         for (var mk in markersArray) {
                             mkArray.push({
                                 position: {
@@ -559,25 +580,34 @@
                                 text: markersArray[mk].text
                             });
                         }
-                        document.getElementById("dummy_id").value+='%%%======MARKERS======%%%';
+                        document.getElementById("dummy_id").value+='{"markers":';
                         document.getElementById("dummy_id").value+=JSON.stringify(mkArray);
+                        document.getElementById("dummy_id").value+='}';
                         ga('set', 'page', 'saved markers');
                         ga('send', 'pageview');
                     }
                     if (polylinesArray.length) {
-                        var plArray = [];
                         for (var i = 0; i < polylinesArray.length; i++) {
                             var l = polylinesArray[i].latLngs.b[0].b;
-                            plArray.push([]);
-                            for (var inside in l) {
-                                plArray[i].push({lat: l[inside].lat(), lng: l[inside].lng()})
-                            }
+
+                            plArray.push(l)
+
+                            //plArray.push([]);
+                            // for (var inside in l) {
+                            //     plArray[i].push({lat: l[inside].lat(), lng: l[inside].lng()})
+                            // }
                         }
-                        document.getElementById("dummy_id").value+='%%%======POLYLINES======%%%';
+                        if (mkArray.length) {
+                            document.getElementById("dummy_id").value+=',{"polylines":';
+                        } else {
+                            document.getElementById("dummy_id").value+='{"polylines":';
+                        }
                         document.getElementById("dummy_id").value+=JSON.stringify(plArray);
+                        document.getElementById("dummy_id").value+='}';
                         ga('set', 'page', 'saved polylines');
                         ga('send', 'pageview');
                     }
+                    document.getElementById("dummy_id").value+=']';
                     dummy.select();
                     document.execCommand("copy");
                     showAction('Координаты сохранены в буфер');
@@ -586,6 +616,26 @@
                     showAction('Нет ни одного маркера или линии');
                 }
 
+            };
+
+            this.load = function(data) {
+                for (var em in data) {
+                  if (data[em].markers) {
+                      for (var mk in data[em].markers) {
+                          self.addMarker(data[em].markers[mk].position, true, data[em].markers[mk].text);
+                      }
+                  }
+                  if (data[em].polylines) {
+                      // console.log(data[em].polylines)
+                      for (var pl in data[em].polylines) {
+                          self.addPolyline(true);
+                          newPolyline = false;
+                          for (var cd in data[em].polylines[pl]) {
+                              self.continuePolyline(data[em].polylines[pl][cd])
+                          }
+                      }
+                  }
+                }
             };
             
             this.newPolyline = function() {
@@ -665,7 +715,7 @@
                     }
                 }
             };
-            this.toggleDrag = function() {
+            this.toggleDrag = function(dontApply) {
                 if (draggable) {
                     self.map.setOptions({
                         draggable: false,
@@ -682,13 +732,14 @@
                     draggable = true;
                 }
                 $rootScope.$broadcast('toggleDrag', {
-                    drag: !draggable
+                    drag: !draggable,
+                    dontApply: dontApply
                 });
             };
 
             document.addEventListener('keydown', keyDownHandler);
             function keyDownHandler(event) {
-                if (document.getElementById('pac-input') !== document.activeElement && document.getElementById('markerInp') !== document.activeElement) {
+                if (document.getElementById('pac-input') !== document.activeElement && document.getElementById('markerInp') !== document.activeElement && document.getElementById('uploadData') !== document.activeElement) {
                     //console.log(event.keyCode)
                     if (event.keyCode === 90) {
                         self.undo(false);
@@ -860,7 +911,7 @@
         };
 
         $scope.toggleDraggable = function() {
-            Map.toggleDrag();
+            Map.toggleDrag(true);
         };
         $scope.setZoom = function(bool) {
             Map.zoomControl(bool)
@@ -883,6 +934,16 @@
         $scope.save = function() {
             Map.save();
         };
+        $scope.load = function(data) {
+            try {
+                Map.load(JSON.parse(data));
+                $scope.showUpload = false;
+                $scope.uploadData = '';
+                showAction('Данные загружены')
+            } catch (err) {
+                showAction('Данные введены не верно')
+            }
+        };
 
         $scope.$on('selectPolyline', function(event, data) {
             if (data.polylineIndex !== $scope.selectedIndex) {
@@ -893,7 +954,6 @@
                 $scope.$apply();
             }
         });
-
         $scope.$on('setPolyline', function(event, data) {
             if (data.quantity) {
                 $scope.polygonsData = [];
@@ -923,7 +983,9 @@
         });
         $scope.$on('toggleDrag', function(event, data) {
             $scope.disableDrag = data.drag;
-            $scope.$apply();
+            if (!data.dontApply) {
+                $scope.$apply();
+            }
         });
         $scope.$on('setMode', function(event, data) {
             if (data.markers) {
