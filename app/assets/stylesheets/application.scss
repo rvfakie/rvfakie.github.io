@@ -71,7 +71,7 @@ body {
 }
 .settings-wrap {
 	position: absolute;
-	z-index: 5;
+	z-index: 6;
 	font-size: 0;
 	&.left {
 		left: 20px;
@@ -86,10 +86,10 @@ body {
 		top: 20px;
 	}
 }
-.settings-type, .settings-config {
+.settings-type {
 	width: 212px;
 	background: #fff;
-	padding: 20px;
+	padding: 16px;
 	box-sizing: border-box;
 	box-shadow: 0 2px 4px rgba(0,0,0,.3);
 	margin-bottom: 20px;
@@ -99,19 +99,138 @@ body {
 		margin: 0 auto;
 	}
 }
-.ui-wrap {
+.settings-config {
 	width: 212px;
+	background: #fff;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	margin-bottom: 20px;
+	.linen {
+		display: flex;
+		align-items: center;
+	}
+}
+.config-header {
+	font-size: 14px;
+	font-family: "Proxima Nova Bold", sans-serif;
+	text-transform: uppercase;
+	padding: 12px 16px;
+	box-sizing: border-box;
+	position: relative;
+	i {
+		font-size: 14px;
+		text-align: center;
+		line-height: 20px;
+		position: absolute;
+		border-radius: 2px;
+		right: 16px;
+		top: 11px;
+		width: 20px;
+		height: 20px;
+		border: 1px solid #7f7f7f;
+		color: #6f6f6f;
+		cursor: pointer;
+		transition: .35s;
+		&:hover {
+			color: #3f3f3f;
+			border: 1px solid #3f3f3f;
+		}
+		&.active {
+			animation: glow 2s infinite linear;
+		}
+	}
+}
+@keyframes glow {
+	0% {
+		color: #3f3f3f;
+		background: transparent;
+	}
+	50% {
+		background: #3f3f3f;
+		color: #fff;
+	}
+	100% {
+		color: #3f3f3f;
+		background: transparent;
+	}
+}
+
+.config-element-wrapper {
+	max-height: 180px;
+	overflow: scroll;
+}
+.config-element {
+	font-size: 12px;
+	padding: 10px 16px;
+	border-top: 1px solid #ccc;
+	cursor: pointer;
+	font-family: "Proxima Nova Bold", sans-serif;
+	&::selection {
+		background: transparent;
+	}
+	&:hover {
+		background: #eee;
+	}
+	&.selected {
+		background: #3f3f3f;
+		color: #fff;
+	}
+}
+.config-element-name {
+	font-family: "Proxima Nova", sans-serif;
+	display: inline-block;
+	vertical-align: center;
+	margin-left: 3px;
+}
+.config-options {
+	padding: 12px 16px;
+	border-top: 1px solid #ccc;
+	label {
+		font-size: 12px;
+		font-family: "Proxima Nova Bold", sans-serif;
+		text-transform: uppercase;
+		margin-bottom: 12px;
+		display: block;
+	}
+	input {
+		outline: none;
+		font-size: 12px;
+		font-family: "Proxima Nova", sans-serif;
+		color: #000;
+		border: none;
+		padding-bottom: 3px;
+		box-sizing: border-box;
+		border-bottom: 1px solid #3f3f3f;
+		width: 100%;
+		margin-bottom: 12px;
+	}
+}
+.config-button {
 	text-align: center;
+	padding: 6px 0;
+	font-size: 12px;
+	box-sizing: border-box;
+	color: darkred;
+	cursor: pointer;
+	transition: .35s;
+	&:hover {
+		background: darkred;
+		color: #fff;
+	}
+}
+.controls-wrapper {
+	position: absolute;
+	top: 20px;
+	right: 20px;
 }
 .settings-ui {
-	width: 38px;
-	height: 38px;
+	width: 30px;
+	height: 30px;
 	border-radius: 38px;
 	box-shadow: 0 2px 4px rgba(0,0,0,.3);
 	background: #fff;
 	display: inline-flex;
 	vertical-align: middle;
-	margin-right: 20px;
+	margin-right: 14px;
 	margin-bottom: 20px;
 	align-items: center;
 	justify-content: center;
@@ -120,7 +239,7 @@ body {
 		margin-right: 0;
 	}
 	i {
-		font-size: 24px;
+		font-size: 14px;
 		color: #3f3f3f;
 	}
 }
@@ -132,7 +251,7 @@ body {
 	}
 	label {
 		text-transform: uppercase;
-		font-size: 14px;
+		font-size: 12px;
 		letter-spacing: 1px;
 		font-family: "Proxima Nova Bold", sans-serif;
 		vertical-align: middle;
@@ -168,7 +287,7 @@ body {
 }
 .upload-data-button {
 	text-transform: uppercase;
-	font-size: 14px;
+	font-size: 12px;
 	letter-spacing: 1px;
 	font-family: "Proxima Nova Bold", sans-serif;
 	vertical-align: middle;
@@ -216,24 +335,19 @@ textarea {
 		text-align: center;
 	}
 }
-.settings-config {
-	.linen {
-		display: flex;
-		align-items: center;
-	}
-	&.upload-config {
+.upload-config {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: auto;
+	min-width: 350px;
+	i {
 		position: absolute;
-		top: 0;
-		width: auto;
-		min-width: 350px;
-		i {
-			position: absolute;
-			right: 3px;
-			top: 1px;
-			color: #c7c7c7;
-			font-size: 18px;
-			cursor: pointer;
-		}
+		right: 3px;
+		top: 1px;
+		color: #c7c7c7;
+		font-size: 18px;
+		cursor: pointer;
 	}
 }
 .upload-config-wrapper {
@@ -252,8 +366,8 @@ textarea {
 	text-align: center;
 }
 .undo-redo-wrap {
-	width: 38px;
-	height: 38px;
+	width: 30px;
+	height: 30px;
 	margin-bottom: 20px;
 	margin-right: 20px;
 	box-shadow: 0 2px 4px rgba(0,0,0,.3);
@@ -264,7 +378,7 @@ textarea {
 	justify-content: center;
 	cursor: pointer;
 	i {
-		font-size: 18px;
+		font-size: 14px;
 		color: #3f3f3f;
 	}
 	&:hover {
@@ -275,7 +389,7 @@ textarea {
 	}
 	.helper {
 		position: absolute;
-		top: 58px;
+		top: 45px;
 		padding: 10px;
 		text-transform: uppercase;
 		font-size: 13px;
@@ -297,17 +411,18 @@ textarea {
 	}
 }
 .after-menu-button {
-	width: 38px;
-	height: 38px;
+	width: 30px;
+	height: 30px;
 	box-shadow: 0 2px 4px rgba(0,0,0,.3);
 	background: #fff;
 	display: inline-flex;
+	vertical-align: top;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
 	margin-right: 20px;
 	i {
-		font-size: 24px;
+		font-size: 16px;
 		color: #3f3f3f;
 	}
 	position: relative;
@@ -319,7 +434,7 @@ textarea {
 	}
 	.helper {
 		position: absolute;
-		top: 58px;
+		top: 45px;
 		padding: 10px;
 		text-transform: uppercase;
 		font-size: 13px;
@@ -402,7 +517,7 @@ textarea {
 	border-bottom: 2px solid #ccc;
 }
 .save-button, .delete-button {
-	font-size: 14px;
+	font-size: 12px;
 	width: 212px;
 	box-shadow: 0 2px 4px rgba(0,0,0,.3);
 	padding: 10px 6px;
@@ -496,7 +611,7 @@ textarea {
 
 .instructions-wrap {
 	position: absolute;
-	left: 308px;
+	left: 300px;
 	width: 330px;
 	padding: 20px;
 	margin-top: 20px;
@@ -516,7 +631,7 @@ textarea {
 	}
 }
 .searchbox-wrapper {
-	height: 38px;
+	height: 30px;
 	width: calc(100vw - 488px);
 	max-width: 600px;
 	background: #fff;
@@ -524,11 +639,11 @@ textarea {
 	display: flex;
 	margin-right: 20px;
 	input {
-		width: calc(100% - 38px);
+		width: calc(100% - 30px);
 		height: 100%;
 		border: none;
 		outline: none;
-		font-size: 16px;
+		font-size: 14px;
 		color: #3f3f3f;
 		padding: 0 20px;
 		box-sizing: border-box;
@@ -557,7 +672,7 @@ textarea {
 	}
 	.helper {
 		position: absolute;
-		top: 58px;
+		top: 45px;
 		padding: 10px;
 		text-transform: uppercase;
 		font-size: 13px;

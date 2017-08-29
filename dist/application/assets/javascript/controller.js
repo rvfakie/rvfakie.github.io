@@ -82,14 +82,18 @@
             var searchBox = new google.maps.places.SearchBox(input);
             //this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
 
-            this.addPolyline = function(load) {
+            this.addPolyline = function(load, name) {
+                if (!name) {
+                    name = 'Без названия'
+                }
                 this.polyline = new google.maps.Polyline({
                     path: emptyArray,
                     geodesic: true,
                     strokeColor: defaultPolylineColor,
                     strokeOpacity: 1.0,
                     strokeWeight: 3,
-                    clickable: true
+                    clickable: true,
+                    name: name
                 });
 
                 polylinesArray.push(this.polyline);
@@ -114,8 +118,11 @@
 
                 $rootScope.$broadcast('setPolyline', {
                     quantity: index,
-                    dontApply: load
+                    dontApply: load,
+                    polylines: polylinesArray
                 });
+
+                $('.config-element-wrapper').scrollTop($('.config-element-wrapper')[0].scrollHeight)
 
                 ga('set', 'page', 'set new polyline');
                 ga('send', 'pageview');
@@ -309,6 +316,55 @@
                 }
             };
 
+            this.deleteSinglePolyline = function(ind) {
+                polylinesArray[ind-1].setMap(null);
+                for (var x in polylineMarkersArray[ind-1]) {
+                    polylineMarkersArray[ind-1][x].setMap(null)
+                }
+                polylineBubblesArray[ind-1][0].close();
+
+                back = back.filter(function( obj ) {
+                    return obj.data.polyline !== polylinesArray[ind-1];
+                });
+
+                polylinesArray.splice(ind-1, 1);
+                polylineMarkersArray.splice(ind-1, 1);
+                polylineBubblesArray.splice(ind-1, 1);
+
+                //resetting polylines infowindows
+                for (var i = 0; i < polylineBubblesArray.length; i++) {
+                    polylineBubblesArray[i][0].setContent(
+                        '<div class="wndw" onclick="console.log('+ (i+1) +')">'+ (i+1).toString() +'</div>'
+                    );
+                    polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
+                }
+
+                if (!polylinesArray.length) {
+                    newPolyline = true;
+                    $rootScope.$broadcast('newPolyline');
+                }
+
+                index = polylinesArray.length;
+
+                if (index >= 1) {
+                    self.setPolylineSelectedColor(polylinesArray[index-1]);
+                }
+
+                $rootScope.$broadcast('setPolyline', {
+                    quantity: index,
+                    polylines: polylinesArray,
+                    dontApply: true
+                });
+
+            };
+
+            this.setPolylineName = function(text) {
+                polylinesArray[index-1].name = text;
+            };
+            this.getPolylineName = function() {
+                return polylinesArray[index-1].name;
+            };
+
             this.deletePolylines = function() {
                 for (var p in polylinesArray) {
                     polylinesArray[p].setMap(null)
@@ -335,6 +391,7 @@
                 });
 
                 newPolyline = true;
+                $rootScope.$broadcast('newPolyline');
 
                 function cr() {
                     for (var u in back) {
@@ -409,6 +466,7 @@
                         if (newPolyline) {
                             self.addPolyline();
                             newPolyline = false;
+                            $rootScope.$broadcast('existingPolyline');
                             polylineMarkersArray.push([]);
                             polylineBubblesArray.push([]);
                         }
@@ -514,6 +572,7 @@
 
                                 if (!polylinesArray.length) {
                                     newPolyline = true;
+                                    $rootScope.$broadcast('newPolyline');
                                 }
 
                                 index = polylinesArray.length;
@@ -529,6 +588,7 @@
                             }
                         } else {
                             newPolyline = true;
+                            $rootScope.$broadcast('newPolyline');
                         }
                         break;
                 }
@@ -557,14 +617,16 @@
                             lastAction.data.marker.setPosition(lastAction.data.latLng);
                             break;
                         case 'continuePolyline':
+                            var indexOfPolygon = polylinesArray.indexOf(lastAction.data.polyline);
+
                             lastAction.data.polyline.getPath().pop();
                             lastAction.data.marker.setMap(null);
-                            polylineMarkersArray[lastAction.data.index].pop();
+                            polylineMarkersArray[indexOfPolygon].pop();
 
-                            if (!polylineMarkersArray[lastAction.data.index].length) {
+                            if (!polylineMarkersArray[indexOfPolygon].length) {
                                 lastAction.data.window.close();
-                                polylineMarkersArray.splice(lastAction.data.index, 1);
-                                polylineBubblesArray.splice(lastAction.data.index, 1);
+                                polylineMarkersArray.splice(indexOfPolygon, 1);
+                                polylineBubblesArray.splice(indexOfPolygon, 1);
                                 polylinesArray.pop();
 
                                 for (var i = 0; i < polylineBubblesArray.length; i++) {
@@ -579,11 +641,13 @@
                                 }
                                 $rootScope.$broadcast('setPolyline', {
                                     quantity: index,
-                                    dontApply: dontApply
+                                    dontApply: dontApply,
+                                    polylines: polylinesArray
                                 });
 
                                 if (!polylinesArray.length) {
                                     newPolyline = true;
+                                    $rootScope.$broadcast('newPolyline');
                                 }
                             }
                             break;
@@ -627,14 +691,13 @@
                     }
                     if (polylinesArray.length) {
                         for (var i = 0; i < polylinesArray.length; i++) {
-                            var l = polylinesArray[i].latLngs.b[0].b;
+                            var coord = polylinesArray[i].latLngs.b[0].b;
 
-                            plArray.push(l)
+                            plArray.push({
+                                position: coord,
+                                text: polylinesArray[i].name
+                            })
 
-                            //plArray.push([]);
-                            // for (var inside in l) {
-                            //     plArray[i].push({lat: l[inside].lat(), lng: l[inside].lng()})
-                            // }
                         }
                         if (mkArray.length) {
                             document.getElementById("dummy_id").value+=',{"polylines":';
@@ -667,10 +730,11 @@
                   if (data[em].polylines) {
                       // console.log(data[em].polylines)
                       for (var pl in data[em].polylines) {
-                          self.addPolyline(true);
+                          self.addPolyline(true, data[em].polylines[pl].text);
                           newPolyline = false;
-                          for (var cd in data[em].polylines[pl]) {
-                              self.continuePolyline(data[em].polylines[pl][cd])
+                          $rootScope.$broadcast('existingPolyline');
+                          for (var cd in data[em].polylines[pl].position) {
+                              self.continuePolyline(data[em].polylines[pl].position[cd])
                           }
                       }
                   }
@@ -679,6 +743,7 @@
             
             this.newPolyline = function() {
                 newPolyline = true;
+                $rootScope.$broadcast('newPolyline');
             };
 
             this.setPinFromAddress = function(address) {
@@ -696,6 +761,7 @@
                                 if (newPolyline) {
                                     self.addPolyline();
                                     newPolyline = false;
+                                    $rootScope.$broadcast('existingPolyline');
                                     polylineMarkersArray.push([]);
                                     polylineBubblesArray.push([]);
                                 }
@@ -723,6 +789,7 @@
             this.setIndex = function(selectedIndex) {
                 if (newPolyline) {
                     newPolyline = false;
+                    $rootScope.$broadcast('existingPolyline');
                 }
                 index = selectedIndex;
 
@@ -778,7 +845,11 @@
 
             document.addEventListener('keydown', keyDownHandler);
             function keyDownHandler(event) {
-                if (document.getElementById('pac-input') !== document.activeElement && document.getElementById('markerInp') !== document.activeElement && document.getElementById('uploadData') !== document.activeElement) {
+                if (document.getElementById('pac-input') !== document.activeElement
+                    && document.getElementById('markerInp') !== document.activeElement
+                    && document.getElementById('uploadData') !== document.activeElement
+                    && document.getElementById('polylineName') !== document.activeElement) {
+
                     //console.log(event.keyCode)
                     if (event.keyCode === 90) {
                         self.undo(false);
@@ -788,6 +859,7 @@
                     }
                     if (event.keyCode === 78) {
                         newPolyline = true;
+                        $rootScope.$broadcast('newPolyline');
                         ga('set', 'page', 'N pressed');
                         ga('send', 'pageview');
                     }
@@ -850,8 +922,11 @@
                 }
                 if (polylinesArray.length) {
                     for (var i = 0; i < polylinesArray.length; i++) {
-                        var l = polylinesArray[i].latLngs.b[0].b;
-                        plArray.push(l)
+                        var coord = polylinesArray[i].latLngs.b[0].b;
+                        plArray.push({
+                            position: coord,
+                            text: polylinesArray[i].name
+                        })
                     }
                     if (mkArray.length) {
                         src +=',{"polylines":';
@@ -953,6 +1028,7 @@
         $scope.shortcutsToggled = false;
         $scope.instructionsToggled = false;
         $scope.gotMarkers = false;
+        $scope.glowing = false;
 
         var addressInput = document.getElementById('pac-input');
 
@@ -996,18 +1072,24 @@
 
         $scope.toggleDraggable = function() {
             Map.toggleDrag(true);
+            console.log($scope.disableDrag)
         };
         $scope.setZoom = function(bool) {
             Map.zoomControl(bool)
         };
-        $scope.selectPolyline = function() {
-            Map.setIndex(parseInt($scope.selectedIndex));
+        $scope.selectPolyline = function(index) {
+            Map.setIndex(parseInt(index));
+            $scope.selectedIndex = index;
+            $scope.polylineName = Map.getPolylineName($scope.selectedIndex);
         };
         $scope.newPolyline = function() {
             Map.newPolyline();
         };
         $scope.deletePolylines = function() {
             Map.deletePolylines();
+        };
+        $scope.deleteSinglePolyline = function() {
+            Map.deleteSinglePolyline($scope.selectedIndex);
         };
         $scope.deleteMarkers = function() {
             Map.deleteMarkers();
@@ -1029,9 +1111,15 @@
             }
         };
 
+        $scope.changePolylineName = function() {
+            Map.setPolylineName($scope.polylineName);
+            $scope.polylinesData[$scope.selectedIndex-1].name = $scope.polylineName;
+        };
+
         $scope.$on('selectPolyline', function(event, data) {
             if (data.polylineIndex !== $scope.selectedIndex) {
                 $scope.selectedIndex = data.polylineIndex;
+                $scope.polylineName = Map.getPolylineName($scope.selectedIndex);
             }
 
             if (!data.dontApply) {
@@ -1040,12 +1128,13 @@
         });
         $scope.$on('setPolyline', function(event, data) {
             if (data.quantity) {
-                $scope.polygonsData = [];
+                $scope.polylinesData = [];
 
-                for (var i = 0; i < data.quantity; i++) {
-                    $scope.polygonsData.push({name: i})
+                for (var i = 0; i < data.polylines.length; i++) {
+                    $scope.polylinesData.push({name: data.polylines[i].name})
                 }
-                $scope.selectedIndex = $scope.polygonsData.length;
+                $scope.selectedIndex = $scope.polylinesData.length;
+                $scope.polylineName = $scope.polylinesData[$scope.polylinesData.length-1].name;
             } else {
                 $scope.selectedIndex = null;
             }
@@ -1053,6 +1142,18 @@
             if (!data.dontApply) {
                 $scope.$apply();
             }
+        });
+        $scope.$on('newPolyline', function() {
+            $scope.glowing = true;
+            $timeout(function() {
+                $scope.$apply()
+            })
+        });
+        $scope.$on('existingPolyline', function() {
+            $scope.glowing = false;
+            $timeout(function() {
+                $scope.$apply()
+            })
         });
         $scope.$on('setMarker', function(event, data) {
             if (data.quantity) {

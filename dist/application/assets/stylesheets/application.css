@@ -62,7 +62,7 @@ body.no-scroll {
 
 .settings-wrap {
   position: absolute;
-  z-index: 5;
+  z-index: 6;
   font-size: 0; }
   .settings-wrap.left {
     left: 20px; }
@@ -73,27 +73,156 @@ body.no-scroll {
   .settings-wrap.top {
     top: 20px; }
 
-.settings-type, .settings-config {
+.settings-type {
   width: 212px;
   background: #fff;
-  padding: 20px;
+  padding: 16px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   margin-bottom: 20px; }
-  .settings-type select, .settings-config select {
+  .settings-type select {
     display: block;
     width: 100px;
     margin: 0 auto; }
 
-.ui-wrap {
+.settings-config {
   width: 212px;
-  text-align: center; }
+  background: #fff;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px; }
+  .settings-config .linen {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center; }
+
+.config-header {
+  font-size: 14px;
+  font-family: "Proxima Nova Bold", sans-serif;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: relative; }
+  .config-header i {
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+    position: absolute;
+    border-radius: 2px;
+    right: 16px;
+    top: 11px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #7f7f7f;
+    color: #6f6f6f;
+    cursor: pointer;
+    -webkit-transition: .35s;
+    transition: .35s; }
+    .config-header i:hover {
+      color: #3f3f3f;
+      border: 1px solid #3f3f3f; }
+    .config-header i.active {
+      -webkit-animation: glow 2s infinite linear;
+              animation: glow 2s infinite linear; }
+
+@-webkit-keyframes glow {
+  0% {
+    color: #3f3f3f;
+    background: transparent; }
+  50% {
+    background: #3f3f3f;
+    color: #fff; }
+  100% {
+    color: #3f3f3f;
+    background: transparent; } }
+
+@keyframes glow {
+  0% {
+    color: #3f3f3f;
+    background: transparent; }
+  50% {
+    background: #3f3f3f;
+    color: #fff; }
+  100% {
+    color: #3f3f3f;
+    background: transparent; } }
+
+.config-element-wrapper {
+  max-height: 180px;
+  overflow: scroll; }
+
+.config-element {
+  font-size: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid #ccc;
+  cursor: pointer;
+  font-family: "Proxima Nova Bold", sans-serif; }
+  .config-element::-moz-selection {
+    background: transparent; }
+  .config-element::selection {
+    background: transparent; }
+  .config-element:hover {
+    background: #eee; }
+  .config-element.selected {
+    background: #3f3f3f;
+    color: #fff; }
+
+.config-element-name {
+  font-family: "Proxima Nova", sans-serif;
+  display: inline-block;
+  vertical-align: center;
+  margin-left: 3px; }
+
+.config-options {
+  padding: 12px 16px;
+  border-top: 1px solid #ccc; }
+  .config-options label {
+    font-size: 12px;
+    font-family: "Proxima Nova Bold", sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block; }
+  .config-options input {
+    outline: none;
+    font-size: 12px;
+    font-family: "Proxima Nova", sans-serif;
+    color: #000;
+    border: none;
+    padding-bottom: 3px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    border-bottom: 1px solid #3f3f3f;
+    width: 100%;
+    margin-bottom: 12px; }
+
+.config-button {
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: darkred;
+  cursor: pointer;
+  -webkit-transition: .35s;
+  transition: .35s; }
+  .config-button:hover {
+    background: darkred;
+    color: #fff; }
+
+.controls-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px; }
 
 .settings-ui {
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   border-radius: 38px;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -102,7 +231,7 @@ body.no-scroll {
   display: -ms-inline-flexbox;
   display: inline-flex;
   vertical-align: middle;
-  margin-right: 20px;
+  margin-right: 14px;
   margin-bottom: 20px;
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -114,7 +243,7 @@ body.no-scroll {
   .settings-ui:last-child {
     margin-right: 0; }
   .settings-ui i {
-    font-size: 24px;
+    font-size: 14px;
     color: #3f3f3f; }
 
 .linen {
@@ -124,7 +253,7 @@ body.no-scroll {
     margin-bottom: 0; }
   .linen label {
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 1px;
     font-family: "Proxima Nova Bold", sans-serif;
     vertical-align: middle;
@@ -151,7 +280,7 @@ body.no-scroll {
 
 .upload-data-button {
   text-transform: uppercase;
-  font-size: 14px;
+  font-size: 12px;
   letter-spacing: 1px;
   font-family: "Proxima Nova Bold", sans-serif;
   vertical-align: middle;
@@ -210,20 +339,13 @@ textarea {
     color: #fff;
     text-align: center; }
 
-.settings-config .linen {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center; }
-
-.settings-config.upload-config {
+.upload-config {
   position: absolute;
   top: 0;
+  left: 0;
   width: auto;
   min-width: 350px; }
-  .settings-config.upload-config i {
+  .upload-config i {
     position: absolute;
     right: 3px;
     top: 1px;
@@ -247,8 +369,8 @@ textarea {
   text-align: center; }
 
 .undo-redo-wrap {
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   margin-bottom: 20px;
   margin-right: 20px;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -266,7 +388,7 @@ textarea {
           justify-content: center;
   cursor: pointer; }
   .undo-redo-wrap i {
-    font-size: 18px;
+    font-size: 14px;
     color: #3f3f3f; }
   .undo-redo-wrap:hover .helper {
     opacity: 1;
@@ -274,7 +396,7 @@ textarea {
             transform: translate3d(0, 0, 0); }
   .undo-redo-wrap .helper {
     position: absolute;
-    top: 58px;
+    top: 45px;
     padding: 10px;
     text-transform: uppercase;
     font-size: 13px;
@@ -300,14 +422,15 @@ textarea {
               transform: translateX(-50%); }
 
 .after-menu-button {
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   background: #fff;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
+  vertical-align: top;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -318,7 +441,7 @@ textarea {
   margin-right: 20px;
   position: relative; }
   .after-menu-button i {
-    font-size: 24px;
+    font-size: 16px;
     color: #3f3f3f; }
   .after-menu-button:hover .helper {
     opacity: 1;
@@ -326,7 +449,7 @@ textarea {
             transform: translate3d(0, 0, 0); }
   .after-menu-button .helper {
     position: absolute;
-    top: 58px;
+    top: 45px;
     padding: 10px;
     text-transform: uppercase;
     font-size: 13px;
@@ -426,7 +549,7 @@ textarea {
   border-bottom: 2px solid #ccc; }
 
 .save-button, .delete-button {
-  font-size: 14px;
+  font-size: 12px;
   width: 212px;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -518,7 +641,7 @@ textarea {
 
 .instructions-wrap {
   position: absolute;
-  left: 308px;
+  left: 300px;
   width: 330px;
   padding: 20px;
   margin-top: 20px;
@@ -543,7 +666,7 @@ textarea {
     cursor: pointer; }
 
 .searchbox-wrapper {
-  height: 38px;
+  height: 30px;
   width: -webkit-calc(100vw - 488px);
   width: calc(100vw - 488px);
   max-width: 600px;
@@ -555,12 +678,12 @@ textarea {
   display: flex;
   margin-right: 20px; }
   .searchbox-wrapper input {
-    width: -webkit-calc(100% - 38px);
-    width: calc(100% - 38px);
+    width: -webkit-calc(100% - 30px);
+    width: calc(100% - 30px);
     height: 100%;
     border: none;
     outline: none;
-    font-size: 16px;
+    font-size: 14px;
     color: #3f3f3f;
     padding: 0 20px;
     -webkit-box-sizing: border-box;
@@ -594,7 +717,7 @@ textarea {
             transform: translate3d(0, 0, 0); }
   .setter-button .helper {
     position: absolute;
-    top: 58px;
+    top: 45px;
     padding: 10px;
     text-transform: uppercase;
     font-size: 13px;

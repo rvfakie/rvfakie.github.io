@@ -1,12 +1,34 @@
 <div id="LAM_Map"></div>
 <div class="settings-wrap top left">
-    <div class="settings-ui" ng-click="setZoom(true)"><i class="fa fa-plus"></i></div>
-    <div class="settings-ui" ng-click="setZoom()"><i class="fa fa-minus"></i></div>
     <div class="undo-redo-wrap" ng-click="undo()">
         <i class="fa fa-reply"></i>
         <div class="helper">Шаг назад</div>
     </div>
     <!--<div class="undo-redo-wrap" ng-click="redo()"><i class="fa fa-share"></i></div>-->
+    <div class="after-menu-button shortcuts-caller" ng-click="toggleDraggable()">
+        <i class="fa fa-lock" ng-show="disableDrag"></i>
+        <i class="fa fa-unlock" ng-show="!disableDrag"></i>
+        <div class="helper">Зафиксировать карту</div>
+    </div>
+    <div class="after-menu-button shortcuts-caller upload-config-wrapper" ng-click="showUpload = true">
+        <i class="fa fa-arrow-circle-o-up"></i>
+        <div class="helper">Загрузить данные</div>
+        <div class="settings-type upload-config" ng-show="showUpload">
+            <div class="upload-wrap"ng-click="$event.stopPropagation(); showUpload = false"></div>
+            <i class="fa fa-times" ng-click="$event.stopPropagation(); showUpload = false"></i>
+            <textarea id="uploadData" ng-model="uploadData"></textarea>
+            <div class="upload-data-button" ng-click="$event.stopPropagation(); load(uploadData)">Загрузить</div>
+        </div>
+    </div>
+    <!--<div class="upload-config-wrapper">-->
+        <!--<div class="save-button" ng-click="showUpload = true"></div>-->
+        <!--<div class="settings-type upload-config" ng-show="showUpload">-->
+            <!--<div class="upload-wrap"ng-click="showUpload = false"></div>-->
+            <!--<i class="fa fa-times" ng-click="showUpload = false"></i>-->
+            <!--<textarea id="uploadData" ng-model="uploadData"></textarea>-->
+            <!--<div class="upload-data-button" ng-click="load(uploadData)">Загрузить</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <div class="settings-type">
         <div class="linen">
             <input type="checkbox" id="marker-input" ng-model="enableMarkers" ng-change="enableM(); setToMap()">
@@ -18,38 +40,26 @@
             <div class="checkbox-holder"><!--<i class="fa fa-check"></i>--></div>
             <label for="polyline-input">Линии</label>
         </div>
-        <div class="linen">
-            <input type="checkbox" id="polygon-input" ng-model="enablePolygons" ng-change="enableG(); setToMap()" disabled>
-            <div class="checkbox-holder"><!--<i class="fa fa-check"></i>--></div>
-            <label for="polygon-input">Полигоны<sup style="color: red;">**</sup></label>
-        </div>
-    </div>
-    <div class="settings-config">
-        <div class="linen">
-            <input type="checkbox" id="draggable-input" ng-model="disableDrag" ng-change="toggleDraggable()">
-            <div class="checkbox-holder"><i class="fa fa-check"></i></div>
-            <label for="draggable-input">Зафиксировать карту</label>
-        </div>
-    </div>
-    <div class="upload-config-wrapper">
-        <div class="save-button" ng-click="showUpload = true">Загрузить данные</div>
-        <div class="settings-config upload-config" ng-show="showUpload">
-            <div class="upload-wrap"ng-click="showUpload = false"></div>
-            <i class="fa fa-times" ng-click="showUpload = false"></i>
-            <textarea id="uploadData" ng-model="uploadData"></textarea>
-            <div class="upload-data-button" ng-click="load(uploadData)">Загрузить</div>
-        </div>
+        <!--<div class="linen">-->
+            <!--<input type="checkbox" id="polygon-input" ng-model="enablePolygons" ng-change="enableG(); setToMap()" disabled>-->
+            <!--<div class="checkbox-holder">&lt;!&ndash;<i class="fa fa-check"></i>&ndash;&gt;</div>-->
+            <!--<label for="polygon-input">Полигоны<sup style="color: red;">**</sup></label>-->
+        <!--</div>-->
     </div>
     <div class="settings-config" ng-show="selectedIndex && enablePolylines">
-        <div class="new-button" ng-click="newPolyline()">Новая линия</div>
-        <div class="polyline-number">Выбрать порядковый номер линии, для редактирования</div>
-        <select  ng-model="selectedIndex" ng-change="selectPolyline()">
-            <option ng-repeat="(key, value) in polygonsData" ng-selected="selectedIndex == $index+1">{{key+1}}</option>
-        </select>
+        <div class="config-header">Линии <i class="fa fa-plus" ng-class="{'active': glowing}" ng-click="newPolyline()"></i></div>
+        <div class="config-element-wrapper">
+            <div class="config-element" ng-repeat="(key, value) in polylinesData" ng-class="{'selected': selectedIndex == $index+1}" ng-click="selectPolyline($index+1)">{{key+1}}. <div class="config-element-name">{{value.name}}</div></div>
+        </div>
+        <div class="config-options">
+            <label for="polylineName">Название линии</label>
+            <input type="text" id="polylineName" class="config-input" ng-model="polylineName" placeholder="Введите название" ng-change="changePolylineName()">
+            <div class="config-button" ng-show="selectedIndex && enablePolylines" ng-click="deleteSinglePolyline()">Удалить линию</div>
+        </div>
     </div>
     <div class="save-button" ng-click="save()" ng-show="selectedIndex || gotMarkers">Сохранить координаты</div>
     <div class="delete-button" ng-show="gotMarkers && enableMarkers" ng-click="deleteMarkers()">Удалить маркеры</div>
-    <div class="delete-button" ng-show="selectedIndex && enablePolylines" ng-click="deletePolylines()">Удалить линии</div>
+    <div class="delete-button" ng-show="selectedIndex && enablePolylines" ng-click="deletePolylines()">Удалить все линии</div>
 </div>
 
 <div class="after-menu-wrapper">
@@ -141,6 +151,11 @@
         <div class="helper">Показать место на карте</div>
     </div>
 
+</div>
+
+<div class="controls-wrapper">
+    <div class="settings-ui" ng-click="setZoom(true)"><i class="fa fa-plus"></i></div>
+    <div class="settings-ui" ng-click="setZoom()"><i class="fa fa-minus"></i></div>
 </div>
 
 <div class="action-window-wrapper">
