@@ -37,7 +37,7 @@
         return data;
     });
 
-    app.service('Map', function($q, $http, $rootScope, dataService) {
+    app.service('Map', function($q, $http, $rootScope, dataService, $timeout) {
         this.init = function(mapId) {
 
             var polylinesArray = [], markersArray = [],
@@ -56,7 +56,6 @@
             var index = 0,
                 defaultZoom = 10;
             var draggable = true;
-            var activeMarker;
 
             var isClosed = false;
 
@@ -82,10 +81,116 @@
             var searchBox = new google.maps.places.SearchBox(input);
             //this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
 
-            this.addPolyline = function(load, name) {
-                if (!name) {
-                    name = 'Без названия'
+            this.addMarker = function(latLng, text) {
+
+                this.marker = new google.maps.Marker({
+                    position: latLng,
+                    map: self.map,
+                    animation: google.maps.Animation.DROP,
+                    clickable: true,
+                    draggable: true,
+                    text: text
+                });
+                markersArray.push(this.marker);
+
+                if (!markerLogic) {
+                    this.marker.setOptions({draggable: false, clickable: false});
                 }
+
+                $rootScope.$broadcast('setMarker', {
+                    markers: markersArray
+                });
+
+                google.maps.event.addListener(this.marker, 'click', function () {
+                    $rootScope.$broadcast('selectMarker', {
+                        index: markersArray.indexOf(this)
+                    });
+                });
+
+                back.push(
+                    {
+                        action: 'addMarker',
+                        data: {
+                            marker: this.marker
+                        }
+                    }
+                );
+
+                var dragStartCoord;
+
+                google.maps.event.addListener(this.marker, 'dragstart', function (e) {
+                    dragStartCoord = e.latLng;
+                });
+
+                google.maps.event.addListener(this.marker, 'dragend', function () {
+                    back.push(
+                        {
+                            action: 'dragMarker',
+                            data: {
+                                marker: this,
+                                latLng: dragStartCoord
+                            }
+                        }
+                    );
+                });
+
+
+                $timeout(function() {
+                    $('.config-element-wrapper').each(function() {
+                        $(this).scrollTop($(this)[0].scrollHeight);
+                    });
+                });
+
+                ga('set', 'page', 'set new marker');
+                ga('send', 'pageview');
+
+            };
+            this.getMarkerName = function(ind) {
+                return markersArray[ind].text;
+            };
+            this.setMarkerName = function(ind, text) {
+                markersArray[ind].text = text;
+            };
+            this.selectMarker = function(ind) {
+                for (var mk in markersArray) {
+                    markersArray[mk].setOptions({animation: false})
+                }
+                if (ind >= 0 && ind !== null) {
+                    markersArray[ind].setOptions({animation: google.maps.Animation.BOUNCE});
+                }
+            };
+            this.deleteMarkers = function() {
+                for (var m in markersArray) {
+                    markersArray[m].setMap(null);
+                }
+                markersArray = [];
+                function cr() {
+                    for (var u in back) {
+                        if (back[u].action === 'addMarker' || back[u].action === 'dragMarker') {
+                            back.splice(u ,1);
+                            cr();
+                        }
+                    }
+                }
+                cr();
+                //TODO LOL TODO
+                $rootScope.$broadcast('setMarker', {
+                    markers: markersArray
+                });
+            };
+            this.deleteSingleMarker = function(ind) {
+                markersArray[ind].setMap(null);
+                back = back.filter(function( obj ) {
+                    return obj.data.marker !== markersArray[ind];
+                });
+                markersArray.splice(ind, 1);
+
+                $rootScope.$broadcast('setMarker', {
+                    markers: markersArray
+                });
+            };
+
+            this.addPolyline = function(load, name) {
                 this.polyline = new google.maps.Polyline({
                     path: emptyArray,
                     geodesic: true,
@@ -118,82 +223,18 @@
 
                 $rootScope.$broadcast('setPolyline', {
                     quantity: index,
-                    dontApply: load,
                     polylines: polylinesArray
                 });
 
-                $('.config-element-wrapper').scrollTop($('.config-element-wrapper')[0].scrollHeight)
+                $timeout(function() {
+                    $('.config-element-wrapper').each(function() {
+                        $(this).scrollTop($(this)[0].scrollHeight);
+                    });
+                });
 
                 ga('set', 'page', 'set new polyline');
                 ga('send', 'pageview');
             };
-
-            this.addMarker = function(latLng, dontApply, text) {
-
-                this.marker = new google.maps.Marker({
-                    position: latLng,
-                    map: self.map,
-                    animation: google.maps.Animation.DROP,
-                    clickable: true,
-                    draggable: true,
-                    text: text,
-                    icon: {
-                        url: 'application/assets/images/triangle.svg',
-                        scaledSize: new google.maps.Size(30, 38),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(15, 38)
-                    }
-                });
-                markersArray.push(this.marker);
-
-                if (!markerLogic) {
-                    this.marker.setOptions({draggable: false, clickable: false});
-                }
-
-                $rootScope.$broadcast('setMarker', {
-                    quantity: markersArray.length,
-                    dontApply: dontApply
-                });
-
-                google.maps.event.addListener(this.marker, 'click', function () {
-                    this.setOptions({animation: google.maps.Animation.BOUNCE});
-                    activeMarker = this;
-
-                    showNamesInput(activeMarker);
-                });
-
-                back.push(
-                    {
-                        action: 'addMarker',
-                        data: {
-                            marker: this.marker
-                        }
-                    }
-                );
-
-                var dragStartCoord;
-
-                google.maps.event.addListener(this.marker, 'dragstart', function (e) {
-                    dragStartCoord = e.latLng;
-                });
-
-                google.maps.event.addListener(this.marker, 'dragend', function () {
-                    back.push(
-                        {
-                            action: 'dragMarker',
-                            data: {
-                                marker: this,
-                                latLng: dragStartCoord
-                            }
-                        }
-                    );
-                });
-
-                ga('set', 'page', 'set new marker');
-                ga('send', 'pageview');
-
-            };
-
             this.addPolylineMarker = function(polyline, latLng) {
                 this.marker = new google.maps.Marker({
                     position: latLng,
@@ -276,7 +317,6 @@
                 });
 
             };
-
             this.continuePolyline = function(latLng) {
 
                 if (lastPolyline !== polylinesArray[index - 1]) {
@@ -302,7 +342,6 @@
                 ga('send', 'pageview');
 
             };
-
             this.setPolylineSelectedColor = function(polyline) {
                 for (var line in polylinesArray) {
                     polylinesArray[line].setOptions({
@@ -315,7 +354,6 @@
                     })
                 }
             };
-
             this.deleteSinglePolyline = function(ind) {
                 polylinesArray[ind-1].setMap(null);
                 for (var x in polylineMarkersArray[ind-1]) {
@@ -352,19 +390,16 @@
 
                 $rootScope.$broadcast('setPolyline', {
                     quantity: index,
-                    polylines: polylinesArray,
-                    dontApply: true
+                    polylines: polylinesArray
                 });
 
             };
-
             this.setPolylineName = function(text) {
                 polylinesArray[index-1].name = text;
             };
             this.getPolylineName = function() {
                 return polylinesArray[index-1].name;
             };
-
             this.deletePolylines = function() {
                 for (var p in polylinesArray) {
                     polylinesArray[p].setMap(null)
@@ -386,8 +421,7 @@
                 index = 0;
 
                 $rootScope.$broadcast('setPolyline', {
-                    quantity: index,
-                    dontApply: true
+                    quantity: index
                 });
 
                 newPolyline = true;
@@ -404,25 +438,18 @@
                 cr();
                 //TODO LOL TODO
             };
-            this.deleteMarkers = function() {
-                for (var m in markersArray) {
-                    markersArray[m].setMap(null);
-                }
-                markersArray = [];
-                function cr() {
-                    for (var u in back) {
-                        if (back[u].action === 'addMarker' || back[u].action === 'dragMarker') {
-                            back.splice(u ,1);
-                            cr();
-                        }
+            this.togglePolylineWindows = function(bool) {
+                for (var i = 0; i < polylineBubblesArray.length; i++) {
+                    if (bool) {
+                        polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
+                    } else {
+                        polylineBubblesArray[i][0].close();
                     }
                 }
-                cr();
-                //TODO LOL TODO
-                $rootScope.$broadcast('setMarker', {
-                    quantity: markersArray.length,
-                    dontApply: true
-                });
+            };
+            this.newPolyline = function() {
+                newPolyline = true;
+                $rootScope.$broadcast('newPolyline');
             };
 
             //FOR POLYGONS
@@ -503,10 +530,6 @@
                     markerLogic = false;
                     polygonLogic = false;
 
-                    if (activeMarker) {
-                        hideNamesInput(activeMarker);
-                    }
-
                     if (markersArray.length) {
                         for (var k in markersArray) {
                             markersArray[k].setOptions({draggable: false, clickable: false})
@@ -525,82 +548,8 @@
                 }
             };
 
-            this.back = function(dontApply) {
-                switch (markerLogic) {
-                    case true:
-                        // lastUndo.set = markersArray[markersArray.length - 1];
-                        // lastUndo.array = markersPositionsArray[markersPositionsArray.length - 1];
-
-                        markersArray[markersArray.length - 1].setMap(null);
-                        markersArray.pop();
-
-                        $rootScope.$broadcast('setMarker', {
-                            quantity: markersArray.length,
-                            dontApply: dontApply
-                        });
-                        break;
-
-                    case false:
-                        if (polylinesArray.length && index <= polylinesArray.length) {
-                            if (polylinesArray[index-1].latLngs.b[0].b.length != 1) {
-
-                                polylineMarkersArray[index-1][polylineMarkersArray[index-1].length-1].setMap(null);
-
-                                polylineMarkersArray[index-1].pop();
-                                polylinesArray[index-1].getPath().pop();
-                            } else {
-                                //removing polylines from map
-                                polylinesArray.splice(index-1, 1);
-
-                                //removing polyline markers
-                                polylineMarkersArray[index-1][polylineMarkersArray[index-1].length-1].setMap(null);
-                                polylineMarkersArray.splice(index-1, 1);
-
-                                //removing polyline infowindow
-                                polylineBubblesArray[index-1][0].close();
-                                polylineBubblesArray.splice(index-1, 1);
-
-                                //resetting polylines infowindows
-                                for (var i = 0; i < polylineBubblesArray.length; i++) {
-                                    polylineBubblesArray[i][0].setContent(
-                                        '<div class="wndw" onclick="console.log('+ (i+1) +')">'+ (i+1).toString() +'</div>'
-                                    );
-                                    polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
-                                }
-
-                                console.log('deleted last polyline in array and its array');
-
-                                if (!polylinesArray.length) {
-                                    newPolyline = true;
-                                    $rootScope.$broadcast('newPolyline');
-                                }
-
-                                index = polylinesArray.length;
-
-                                if (index >= 1) {
-                                    self.setPolylineSelectedColor(polylinesArray[index-1]);
-                                }
-
-                                $rootScope.$broadcast('setPolyline', {
-                                    quantity: index,
-                                    dontApply: dontApply
-                                });
-                            }
-                        } else {
-                            newPolyline = true;
-                            $rootScope.$broadcast('newPolyline');
-                        }
-                        break;
-                }
-                ga('set', 'page', 'undo');
-                ga('send', 'pageview');
-            };
-
-            this.undo = function(dontApply) {
+            this.undo = function() {
                 if (back.length) {
-                    if (activeMarker) {
-                        hideNamesInput(activeMarker)
-                    }
                     
                     var lastAction = back[back.length-1];
                     switch (lastAction.action) {
@@ -609,8 +558,7 @@
                             markersArray.pop();
                             
                             $rootScope.$broadcast('setMarker', {
-                                quantity: markersArray.length,
-                                dontApply: dontApply
+                                markers: markersArray
                             });
                             break;
                         case 'dragMarker':
@@ -641,7 +589,6 @@
                                 }
                                 $rootScope.$broadcast('setPolyline', {
                                     quantity: index,
-                                    dontApply: dontApply,
                                     polylines: polylinesArray
                                 });
 
@@ -724,7 +671,7 @@
                 for (var em in data) {
                   if (data[em].markers) {
                       for (var mk in data[em].markers) {
-                          self.addMarker(data[em].markers[mk].position, true, data[em].markers[mk].text);
+                          self.addMarker(data[em].markers[mk].position, data[em].markers[mk].text);
                       }
                   }
                   if (data[em].polylines) {
@@ -739,11 +686,6 @@
                       }
                   }
                 }
-            };
-            
-            this.newPolyline = function() {
-                newPolyline = true;
-                $rootScope.$broadcast('newPolyline');
             };
 
             this.setPinFromAddress = function(address) {
@@ -812,16 +754,7 @@
                 ga('set', 'page', 'zoom pressed');
                 ga('send', 'pageview');
             };
-            this.togglePolylineWindows = function(bool) {
-                for (var i = 0; i < polylineBubblesArray.length; i++) {
-                    if (bool) {
-                        polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
-                    } else {
-                        polylineBubblesArray[i][0].close();
-                    }
-                }
-            };
-            this.toggleDrag = function(dontApply) {
+            this.toggleDrag = function() {
                 if (draggable) {
                     self.map.setOptions({
                         draggable: false,
@@ -838,8 +771,7 @@
                     draggable = true;
                 }
                 $rootScope.$broadcast('toggleDrag', {
-                    drag: !draggable,
-                    dontApply: dontApply
+                    drag: !draggable
                 });
             };
 
@@ -852,7 +784,7 @@
 
                     //console.log(event.keyCode)
                     if (event.keyCode === 90) {
-                        self.undo(false);
+                        self.undo();
 
                         // ga('set', 'page', 'Z pressed');
                         // ga('send', 'pageview');
@@ -1027,7 +959,6 @@
         $scope.disableDrag = false;
         $scope.shortcutsToggled = false;
         $scope.instructionsToggled = false;
-        $scope.gotMarkers = false;
         $scope.glowing = false;
 
         var addressInput = document.getElementById('pac-input');
@@ -1041,6 +972,9 @@
             Map.togglePolylineWindows();
         };
         $scope.enableP = function() {
+            $scope.selectedMarkerIndex = null;
+            Map.selectMarker(null);
+
             $scope.enablePolylines = true;
             $scope.enableMarkers = !$scope.enablePolylines;
             $scope.enablePolygons = !$scope.enablePolylines;
@@ -1071,12 +1005,12 @@
         };
 
         $scope.toggleDraggable = function() {
-            Map.toggleDrag(true);
-            console.log($scope.disableDrag)
+            Map.toggleDrag();
         };
         $scope.setZoom = function(bool) {
             Map.zoomControl(bool)
         };
+
         $scope.selectPolyline = function(index) {
             Map.setIndex(parseInt(index));
             $scope.selectedIndex = index;
@@ -1091,11 +1025,37 @@
         $scope.deleteSinglePolyline = function() {
             Map.deleteSinglePolyline($scope.selectedIndex);
         };
+        $scope.changePolylineName = function() {
+            Map.setPolylineName($scope.polylineName);
+            $scope.polylinesData[$scope.selectedIndex-1].name = $scope.polylineName;
+        };
+
+        $scope.selectMarker = function(index) {
+
+            if ($scope.selectedMarkerIndex !== index) {
+                $scope.selectedMarkerIndex = index;
+                $scope.markerName = Map.getMarkerName(index);
+                Map.selectMarker(index);
+            } else {
+                $scope.selectedMarkerIndex = null;
+                Map.selectMarker(null);
+            }
+        };
         $scope.deleteMarkers = function() {
             Map.deleteMarkers();
+            $scope.markersData = [];
+            $scope.selectedMarkerIndex = null;
         };
+        $scope.deleteSingleMarker = function() {
+            Map.deleteSingleMarker($scope.selectedMarkerIndex);
+        };
+        $scope.changeMarkerName = function() {
+            Map.setMarkerName($scope.selectedMarkerIndex, $scope.markerName);
+            $scope.markersData[$scope.selectedMarkerIndex].name = $scope.markerName;
+        };
+
         $scope.undo = function() {
-            Map.undo(true);
+            Map.undo();
         };
         $scope.save = function() {
             Map.save();
@@ -1111,20 +1071,15 @@
             }
         };
 
-        $scope.changePolylineName = function() {
-            Map.setPolylineName($scope.polylineName);
-            $scope.polylinesData[$scope.selectedIndex-1].name = $scope.polylineName;
-        };
-
         $scope.$on('selectPolyline', function(event, data) {
             if (data.polylineIndex !== $scope.selectedIndex) {
                 $scope.selectedIndex = data.polylineIndex;
                 $scope.polylineName = Map.getPolylineName($scope.selectedIndex);
             }
 
-            if (!data.dontApply) {
+            $timeout(function() {
                 $scope.$apply();
-            }
+            })
         });
         $scope.$on('setPolyline', function(event, data) {
             if (data.quantity) {
@@ -1139,9 +1094,9 @@
                 $scope.selectedIndex = null;
             }
 
-            if (!data.dontApply) {
+            $timeout(function() {
                 $scope.$apply();
-            }
+            })
         });
         $scope.$on('newPolyline', function() {
             $scope.glowing = true;
@@ -1155,22 +1110,41 @@
                 $scope.$apply()
             })
         });
+
         $scope.$on('setMarker', function(event, data) {
-            if (data.quantity) {
-                $scope.gotMarkers = true;
+            $scope.markersData = [];
+            $scope.selectedMarkerIndex = null;
+            Map.selectMarker(null);
+
+            if (data.markers.length) {
+                for (var i = 0; i < data.markers.length; i++) {
+                    $scope.markersData.push({name: data.markers[i].text})
+                }
+            }
+            $timeout(function() {
+                $scope.$apply();
+            })
+        });
+        $scope.$on('selectMarker', function(event, data) {
+            if ($scope.selectedMarkerIndex !== data.index) {
+                $scope.selectedMarkerIndex = data.index;
+                $scope.markerName = Map.getMarkerName(data.index);
+                Map.selectMarker(data.index);
             } else {
-                $scope.gotMarkers = false;
+                $scope.selectedMarkerIndex = null;
+                Map.selectMarker(null);
             }
 
-            if (!data.dontApply) {
+            $timeout(function() {
                 $scope.$apply();
-            }
+            })
         });
+
         $scope.$on('toggleDrag', function(event, data) {
             $scope.disableDrag = data.drag;
-            if (!data.dontApply) {
+            $timeout(function() {
                 $scope.$apply();
-            }
+            })
         });
         $scope.$on('setMode', function(event, data) {
             if (data.markers) {
@@ -1178,7 +1152,9 @@
             } else {
                 $scope.enableP();
             }
-            $scope.$apply();
+            $timeout(function() {
+                $scope.$apply();
+            })
         });
 
         $rootScope.$broadcast('indexAllSet');

@@ -1,11 +1,14 @@
 <div id="LAM_Map"></div>
+<div class="copyright">
+    <a href="mailto:rvfakie@gmail.com?subject=alphashape GMaps editor">fakie</a> | v.2.1
+</div>
 <div class="settings-wrap top left">
     <div class="undo-redo-wrap" ng-click="undo()">
         <i class="fa fa-reply"></i>
         <div class="helper">Шаг назад</div>
     </div>
     <!--<div class="undo-redo-wrap" ng-click="redo()"><i class="fa fa-share"></i></div>-->
-    <div class="after-menu-button shortcuts-caller" ng-click="toggleDraggable()">
+    <div class="after-menu-button shortcuts-caller" ng-class="{'active': disableDrag}" ng-click="toggleDraggable()">
         <i class="fa fa-lock" ng-show="disableDrag"></i>
         <i class="fa fa-unlock" ng-show="!disableDrag"></i>
         <div class="helper">Зафиксировать карту</div>
@@ -13,43 +16,47 @@
     <div class="after-menu-button shortcuts-caller upload-config-wrapper" ng-click="showUpload = true">
         <i class="fa fa-arrow-circle-o-up"></i>
         <div class="helper">Загрузить данные</div>
-        <div class="settings-type upload-config" ng-show="showUpload">
-            <div class="upload-wrap"ng-click="$event.stopPropagation(); showUpload = false"></div>
-            <i class="fa fa-times" ng-click="$event.stopPropagation(); showUpload = false"></i>
-            <textarea id="uploadData" ng-model="uploadData"></textarea>
-            <div class="upload-data-button" ng-click="$event.stopPropagation(); load(uploadData)">Загрузить</div>
-        </div>
     </div>
-    <!--<div class="upload-config-wrapper">-->
-        <!--<div class="save-button" ng-click="showUpload = true"></div>-->
-        <!--<div class="settings-type upload-config" ng-show="showUpload">-->
-            <!--<div class="upload-wrap"ng-click="showUpload = false"></div>-->
-            <!--<i class="fa fa-times" ng-click="showUpload = false"></i>-->
-            <!--<textarea id="uploadData" ng-model="uploadData"></textarea>-->
-            <!--<div class="upload-data-button" ng-click="load(uploadData)">Загрузить</div>-->
-        <!--</div>-->
-    <!--</div>-->
     <div class="settings-type">
-        <div class="linen">
+        <div class="settings-type-block">
             <input type="checkbox" id="marker-input" ng-model="enableMarkers" ng-change="enableM(); setToMap()">
-            <div class="checkbox-holder"><!--<i class="fa fa-check"></i>--></div>
-            <label for="marker-input">Маркеры</label>
+            <label for="marker-input" ng-class="{'active': enableMarkers}">Маркеры</label>
         </div>
-        <div class="linen">
+        <div class="settings-type-block">
             <input type="checkbox" id="polyline-input" ng-model="enablePolylines" ng-change="enableP(); setToMap()">
-            <div class="checkbox-holder"><!--<i class="fa fa-check"></i>--></div>
-            <label for="polyline-input">Линии</label>
+            <label for="polyline-input" ng-class="{'active': enablePolylines}">Линии</label>
         </div>
-        <!--<div class="linen">-->
-            <!--<input type="checkbox" id="polygon-input" ng-model="enablePolygons" ng-change="enableG(); setToMap()" disabled>-->
-            <!--<div class="checkbox-holder">&lt;!&ndash;<i class="fa fa-check"></i>&ndash;&gt;</div>-->
-            <!--<label for="polygon-input">Полигоны<sup style="color: red;">**</sup></label>-->
-        <!--</div>-->
+        <div class="checkbox-holder" ng-class="{'polylines': enablePolylines}"></div>
+    </div>
+    <div class="settings-config" ng-show="markersData.length && enableMarkers">
+        <div class="config-header">Маркеры</div>
+        <div class="config-element-wrapper">
+            <div class="config-element" ng-repeat="(key, value) in markersData" ng-class="{'selected': selectedMarkerIndex == $index}" ng-click="selectMarker($index)">
+                {{key+1}}.
+                <div class="config-element-name">
+                    {{value.name}}
+                    <div ng-show="!value.name">Без названия</div>
+                </div>
+                <i class="fa fa-map-marker"></i>
+            </div>
+        </div>
+        <div class="config-options" ng-show="selectedMarkerIndex >= 0 && selectedMarkerIndex !== null">
+            <label for="markerName">Название маркера</label>
+            <input type="text" id="markerName" class="config-input" ng-model="markerName" placeholder="Введите название" ng-change="changeMarkerName()">
+            <div class="config-button" ng-show="selectedMarkerIndex >= 0 && selectedMarkerIndex !== null" ng-click="deleteSingleMarker()">Удалить выбранный маркер</div>
+        </div>
     </div>
     <div class="settings-config" ng-show="selectedIndex && enablePolylines">
         <div class="config-header">Линии <i class="fa fa-plus" ng-class="{'active': glowing}" ng-click="newPolyline()"></i></div>
         <div class="config-element-wrapper">
-            <div class="config-element" ng-repeat="(key, value) in polylinesData" ng-class="{'selected': selectedIndex == $index+1}" ng-click="selectPolyline($index+1)">{{key+1}}. <div class="config-element-name">{{value.name}}</div></div>
+            <div class="config-element" ng-repeat="(key, value) in polylinesData" ng-class="{'selected': selectedIndex == $index+1}" ng-click="selectPolyline($index+1)">
+                {{key+1}}.
+                <div class="config-element-name">
+                    {{value.name}}
+                    <div ng-show="!value.name">Без названия</div>
+                </div>
+                <i class="fa fa-share-alt"></i>
+            </div>
         </div>
         <div class="config-options">
             <label for="polylineName">Название линии</label>
@@ -57,10 +64,16 @@
             <div class="config-button" ng-show="selectedIndex && enablePolylines" ng-click="deleteSinglePolyline()">Удалить линию</div>
         </div>
     </div>
-    <div class="save-button" ng-click="save()" ng-show="selectedIndex || gotMarkers">Сохранить координаты</div>
-    <div class="delete-button" ng-show="gotMarkers && enableMarkers" ng-click="deleteMarkers()">Удалить маркеры</div>
+    <div class="save-button" ng-click="save()" ng-show="selectedIndex || markersData.length">Сохранить координаты</div>
+    <div class="delete-button" ng-show="markersData.length && enableMarkers" ng-click="deleteMarkers()">Удалить маркеры</div>
     <div class="delete-button" ng-show="selectedIndex && enablePolylines" ng-click="deletePolylines()">Удалить все линии</div>
 </div>
+<div class="settings-type upload-config" ng-show="showUpload">
+    <i class="fa fa-times" ng-click="showUpload = false"></i>
+    <textarea id="uploadData" ng-model="uploadData" placeholder="Вставьте JSON код"></textarea>
+    <div class="upload-data-button" ng-click="load(uploadData)">Загрузить</div>
+</div>
+<div class="upload-wrap" ng-show="showUpload" ng-click="$event.stopPropagation(); showUpload = false"></div>
 
 <div class="after-menu-wrapper">
 
@@ -115,14 +128,27 @@
             <i class="fa fa-times" ng-click="instructionsToggled = !instructionsToggled"></i>
             <div class="shortcut-title">Инструкция</div>
             <div class="instructions-text">Изучите шорткаты, для более удобного использования.</div>
-            <div class="instructions-text">Взаимодествие с картой происходит в разных режимах. Это режимы линий и маркеров.</div>
             <div class="instructions-text">
-                Чтобы построить линию или поставить маркер, в соответствии от выбранного
-                режима, необходимо кликнуть на карту или вписать адрес в адресную строку и кликнуть на кнопку маркера справа от поля ввода.
+                Взаимодествие с картой происходит в разных режимах. Это режимы линий и маркеров.
+            </div>
+            <div class="instructions-text">
+                Чтобы начать взаимодействие с картой, нужно выбрать режим взаимодействия - <b>Маркеры</b> или <b>Линии</b>.
+                После выбора режима, нужно кликнуть на карту.
+            </div>
+            <div class="instructions-text">
+                С картой можно (нужно) взаимодействовать в обоих режимах. Например, нарисовать линию и поставить
+                маркеры на ней/рядом с ней. Для этого нужно переключать режимы взаимодействия.
             </div>
             <div class="instructions-text">Маркеры и точки излома линий можно перетаскивать.</div>
             <div class="instructions-text">
-                Обратить внимание! Порядковые номера линий пересчитываются после удаления одной из линий.
+                Маркеры и линии можно переименовывать. Чтобы переименовать маркер, его нужно выделить. Чтобы выделить
+                маркер, нужно кликнуть на него на карте или кликнуть на него в меню маркеров. После успешного выделения
+                в меню маркеров появится окно, в котором ему можно дать название. Аналогично можно поступить и с линиями.
+            </div>
+            <div class="instructions-text">
+                Чтобы начать рисовать новую линию, нужно нажать `<b>+</b>` в меню линий или на шорткат (см. Шорткаты) и
+                кликнуть на карту. На карте и в меню линий появится новая линия. Чтобы взаимодействовать с определенной линией,
+                ее нужно выделить.
             </div>
             <div class="instructions-text">
                 Когда линии полностью готовы и/или все маркеры выставлены, необходимо сохранить их. Координаты сохраняются в буфер обмена<sup>*</sup>.
@@ -131,9 +157,21 @@
                 После сохранения координат, необходимо вставить данные из буфера обмена в текстовый редактор (<b>CTRL+V</b>)
                 или вставить напрямую в письмо/слек/любой чатик на хайпе и передать эти "каракули" разработчикам.
             </div>
+            <div class="instructions-text"><b>ВАЖНО</b></div>
+            <div class="instructions-text">
+                Обратить внимание! Порядковые номера линий пересчитываются после удаления одной из линий.
+            </div>
+            <div class="instructions-text">
+                Маркеры и линии можно загружать на карту. Для этого нужно скопировать JSON код ранее выставленных маркеров и/или линий,
+                открыть окно загрузки кода и вставить туда код. После чего нажать на кнопку загрузить. Если код введен
+                верно, на карте появятся загруженные маркеры и/или линии.
+            </div>
+            <div class="instructions-text">
+                Сайт можно перезагружать/закрывать. Все данные автоматически сохраняются в localStorage, при условии, что
+                вы находитесь на сайте не в режиме инкогнито.
+            </div>
             <div class="instructions-text sup">
                 <sup>*</sup> Буфер обмена это то, что происходит при нажатии <b>CTRL+C</b><br>
-                <sup>**</sup> Полигоны находятся в процессе разработки
             </div>
         </div>
     </div>

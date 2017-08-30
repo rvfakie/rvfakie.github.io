@@ -71,7 +71,7 @@ body {
 }
 .settings-wrap {
 	position: absolute;
-	z-index: 6;
+	z-index: 5;
 	font-size: 0;
 	&.left {
 		left: 20px;
@@ -89,14 +89,58 @@ body {
 .settings-type {
 	width: 212px;
 	background: #fff;
-	padding: 16px;
 	box-sizing: border-box;
 	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	display: flex;
+	position: relative;
 	margin-bottom: 20px;
-	select {
+}
+.settings-type-block {
+	cursor: pointer;
+	padding: 8px 0;
+	z-index: 1;
+	width: 50%;
+	text-align: center;
+	position: relative;
+	label {
+		text-transform: uppercase;
+		font-size: 12px;
+		letter-spacing: 1px;
+		font-family: "Proxima Nova Bold", sans-serif;
+		vertical-align: middle;
+		color: #3f3f3f;
+		position: relative;
+		cursor: pointer;
+		transition: .3s ease-in;
+		&.active {
+			color: #fff;
+		}
+		&::selection {
+			background: transparent;
+		}
+	}
+	input {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
 		display: block;
-		width: 100px;
-		margin: 0 auto;
+		opacity: 0;
+		cursor: pointer;
+	}
+}
+.checkbox-holder {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 50%;
+	height: 100%;
+	background: #3f3f3f;
+	z-index: 0;
+	transition: .35s ease-out;
+	&.polylines {
+		transform: translate3d(100%,0,0)
 	}
 }
 .settings-config {
@@ -104,6 +148,7 @@ body {
 	background: #fff;
 	box-shadow: 0 2px 4px rgba(0,0,0,.3);
 	margin-bottom: 20px;
+	position: relative;
 	.linen {
 		display: flex;
 		align-items: center;
@@ -117,15 +162,14 @@ body {
 	box-sizing: border-box;
 	position: relative;
 	i {
-		font-size: 14px;
+		font-size: 12px;
 		text-align: center;
-		line-height: 20px;
+		line-height: 18px;
 		position: absolute;
-		border-radius: 2px;
 		right: 16px;
 		top: 11px;
-		width: 20px;
-		height: 20px;
+		width: 17px;
+		height: 17px;
 		border: 1px solid #7f7f7f;
 		color: #6f6f6f;
 		cursor: pointer;
@@ -160,10 +204,14 @@ body {
 }
 .config-element {
 	font-size: 12px;
-	padding: 10px 16px;
+	padding: 10px 32px 10px 16px;
 	border-top: 1px solid #ccc;
 	cursor: pointer;
 	font-family: "Proxima Nova Bold", sans-serif;
+	position: relative;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 	&::selection {
 		background: transparent;
 	}
@@ -173,6 +221,11 @@ body {
 	&.selected {
 		background: #3f3f3f;
 		color: #fff;
+	}
+	i {
+		position: absolute;
+		right: 16px;
+		top: 12px;
 	}
 }
 .config-element-name {
@@ -243,48 +296,6 @@ body {
 		color: #3f3f3f;
 	}
 }
-.linen {
-	margin-bottom: 10px;
-	font-size: 0;
-	&:last-child {
-		margin-bottom: 0;
-	}
-	label {
-		text-transform: uppercase;
-		font-size: 12px;
-		letter-spacing: 1px;
-		font-family: "Proxima Nova Bold", sans-serif;
-		vertical-align: middle;
-		color: #3f3f3f;
-		cursor: pointer;
-	}
-	input {
-		position: absolute;
-		width: 20px;
-		height: 20px;
-		&:checked {
-			+ .checkbox-holder {
-				background: #3f3f3f;
-				i {
-					display: block;
-				}
-			}
-		}
-		&:disabled {
-			cursor: default;
-			+ .checkbox-holder {
-				border: 1px solid #ddd;
-				cursor: default;
-			}
-			~ label {
-				color: #ddd;
-				cursor: default;
-			}
-		}
-		opacity: 0;
-		cursor: pointer;
-	}
-}
 .upload-data-button {
 	text-transform: uppercase;
 	font-size: 12px;
@@ -308,39 +319,17 @@ textarea {
 	padding: 8px 6px;
 	min-height: 230px;
 }
-.polyline-number {
-	margin-bottom: 10px;
-	font-size: 14px;
-	line-height: 14px;
-	text-align: center;
-}
-.checkbox-holder {
-	width: 20px;
-	height: 20px;
-	border: 1px solid #3f3f3f;
-	box-shadow: inset 0 0 0 1px #fff;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	vertical-align: middle;
-	box-sizing: border-box;
-	margin-right: 10px;
-	flex: none;
-	background: transparent;
-	transition: background .15s;
-	i {
-		display: none;
-		font-size: 12px;
-		color: #fff;
-		text-align: center;
-	}
-}
 .upload-config {
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: 20px;
+	left: 120px;
 	width: auto;
 	min-width: 350px;
+	display: block;
+	padding: 16px;
+	z-index: 7;
+	cursor: default;
+	margin-bottom: 0;
 	i {
 		position: absolute;
 		right: 3px;
@@ -350,14 +339,10 @@ textarea {
 		cursor: pointer;
 	}
 }
-.upload-config-wrapper {
-	position: relative;
-	z-index: 6;
-}
 .upload-wrap {
 	width: 100vw;
 	height: 100vh;
-	z-index: -1;
+	z-index: 6;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -377,6 +362,8 @@ textarea {
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
+	position: relative;
+	z-index: 6;
 	i {
 		font-size: 14px;
 		color: #3f3f3f;
@@ -426,10 +413,17 @@ textarea {
 		color: #3f3f3f;
 	}
 	position: relative;
+	z-index: 6;
 	&:hover {
 		.helper {
 			opacity: 1;
 			transform: translate3d(0, 0, 0);
+		}
+	}
+	&.active {
+		background: #3f3f3f;
+		i {
+			color: #fff;
 		}
 	}
 	.helper {
@@ -606,7 +600,7 @@ textarea {
 	overflow-y: scroll;
 	position: fixed;
 	left: 0;
-	z-index: 5;
+	z-index: 7;
 }
 
 .instructions-wrap {
@@ -762,4 +756,16 @@ textarea {
 		font-family: "Proxima Nova Bold", sans-serif;
 		text-transform: uppercase;
 	}
+}
+.copyright {
+	position: fixed;
+	bottom: 20px;
+	right: 0;
+	left: 0;
+	margin: auto;
+	width: 75px;
+	text-align: center;
+	font-family: "Proxima Nova", sans-serif;
+	color: #000;
+	font-size: 14px;
 }
