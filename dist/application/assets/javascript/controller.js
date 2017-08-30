@@ -780,7 +780,8 @@
                 if (document.getElementById('pac-input') !== document.activeElement
                     && document.getElementById('markerInp') !== document.activeElement
                     && document.getElementById('uploadData') !== document.activeElement
-                    && document.getElementById('polylineName') !== document.activeElement) {
+                    && document.getElementById('polylineName') !== document.activeElement
+                    && document.getElementById('marker-input') !== document.activeElement) {
 
                     //console.log(event.keyCode)
                     if (event.keyCode === 90) {
