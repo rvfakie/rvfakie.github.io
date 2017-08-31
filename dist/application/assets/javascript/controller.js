@@ -961,6 +961,7 @@
         $scope.shortcutsToggled = false;
         $scope.instructionsToggled = false;
         $scope.glowing = false;
+        $scope.confirmIsVisible = false;
 
         var addressInput = document.getElementById('pac-input');
 
@@ -1021,10 +1022,10 @@
             Map.newPolyline();
         };
         $scope.deletePolylines = function() {
-            Map.deletePolylines();
+            $scope.confirm('Вы уверены, что хотите удалить все линии?', Map.deletePolylines);
         };
         $scope.deleteSinglePolyline = function() {
-            Map.deleteSinglePolyline($scope.selectedIndex);
+            $scope.confirm('Вы уверены, что хотите удалить выбранную линию?', Map.deleteSinglePolyline, $scope.selectedIndex);
         };
         $scope.changePolylineName = function() {
             Map.setPolylineName($scope.polylineName);
@@ -1043,12 +1044,14 @@
             }
         };
         $scope.deleteMarkers = function() {
-            Map.deleteMarkers();
-            $scope.markersData = [];
-            $scope.selectedMarkerIndex = null;
+            var localFn = function() {
+                $scope.markersData = [];
+                $scope.selectedMarkerIndex = null;
+            };
+            $scope.confirm('Вы уверены, что хотите удалить все маркеры?', Map.deleteMarkers, null, localFn);
         };
         $scope.deleteSingleMarker = function() {
-            Map.deleteSingleMarker($scope.selectedMarkerIndex);
+            $scope.confirm('Вы уверены, что хотите удалить выбранный маркер?', Map.deleteSingleMarker, $scope.selectedMarkerIndex);
         };
         $scope.changeMarkerName = function() {
             Map.setMarkerName($scope.selectedMarkerIndex, $scope.markerName);
@@ -1070,6 +1073,34 @@
             } catch (err) {
                 showAction('Данные введены не верно')
             }
+        };
+        $scope.confirm = function(text, fn, argument, standaloneFn) {
+
+            $scope.confirmIsVisible = true;
+            $scope.confirmText = text;
+
+            $('.agree-button').off('click');
+            $(document).unbind('confirm');
+            $(document).bind('confirm', function () {
+                $('.agree-button').off('click');
+
+                // A bit of ternary magic
+                (argument) ? fn(argument) : (typeof argument === 'number') ? fn(argument) : fn();
+
+                if (standaloneFn) {
+                    standaloneFn();
+                }
+                $scope.confirmIsVisible = false;
+                $timeout(function() {
+                    $scope.$apply();
+                })
+            });
+
+            $('.agree-button').on('click', function() {
+                $(document).trigger('confirm');
+                $(document).unbind('confirm');
+                $('.agree-button').off('click');
+            })
         };
 
         $scope.$on('selectPolyline', function(event, data) {

@@ -207,3 +207,15 @@
         <div class="names-save-button">Сохранить</div>
     </div>
 </div>
+
+<div class="confirm-wrap" ng-class="{'visible': confirmIsVisible}">
+    <div class="confirm-fade" ng-click="confirmIsVisible = false"></div>
+    <div class="confirm-block">
+        <i class="fa fa-times" ng-click="confirmIsVisible = false"></i>
+        <div class="confirm-text">{{confirmText}} Это действие необратимо.</div>
+        <div class="confirm-controls-wrap">
+            <div class="confirm-button deny-button" ng-click="confirmIsVisible = false">Отменить</div>
+            <div class="confirm-button agree-button">Так точно</div>
+        </div>
+    </div>
+</div>
