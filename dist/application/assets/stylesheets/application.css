@@ -202,6 +202,7 @@ body.no-scroll {
 
 .config-element-wrapper {
   max-height: 180px;
+  overflow-y: scroll;
   overflow-y: overlay; }
 
 .config-element {

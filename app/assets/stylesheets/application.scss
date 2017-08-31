@@ -200,10 +200,8 @@ body {
 
 .config-element-wrapper {
 	max-height: 180px;
+	overflow-y: scroll;
 	overflow-y: overlay;
-	//&::-webkit-scrollbar {
-	//	width: 0;
-	//}
 }
 .config-element {
 	font-size: 12px;
