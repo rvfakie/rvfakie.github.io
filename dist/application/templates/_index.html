@@ -1,6 +1,6 @@
 <div id="LAM_Map"></div>
 <div class="copyright">
-    <a href="mailto:rvfakie@gmail.com?subject=alphashape GMaps editor">fakie</a> | v.2.1
+    <a href="mailto:rvfakie@gmail.com?subject=alphashape GMaps editor">fakie</a> | v.2.2
 </div>
 <div class="settings-wrap top left">
     <div class="undo-redo-wrap" ng-click="undo()">
@@ -40,11 +40,11 @@
                 <i class="fa fa-map-marker"></i>
             </div>
         </div>
-        <div class="config-options" ng-show="selectedMarkerIndex >= 0 && selectedMarkerIndex !== null">
-            <label for="markerName">Название маркера</label>
-            <input type="text" id="markerName" class="config-input" ng-model="markerName" placeholder="Введите название" ng-change="changeMarkerName()">
-            <div class="config-button" ng-show="selectedMarkerIndex >= 0 && selectedMarkerIndex !== null" ng-click="deleteSingleMarker()">Удалить выбранный маркер</div>
-        </div>
+    </div>
+    <div class="config-options" ng-show="selectedMarkerIndex >= 0 && selectedMarkerIndex !== null">
+        <label for="markerName">Название маркера</label>
+        <textarea id="markerName" class="config-input" ng-model="markerName" placeholder="Введите название" ng-change="changeMarkerName()"></textarea>
+        <div class="config-button" ng-show="selectedMarkerIndex >= 0 && selectedMarkerIndex !== null" ng-click="deleteSingleMarker()">Удалить выбранный маркер</div>
     </div>
     <div class="settings-config" ng-show="selectedIndex && enablePolylines">
         <div class="config-header">Линии <i class="fa fa-plus" ng-class="{'active': glowing}" ng-click="newPolyline()"></i></div>
@@ -58,15 +58,13 @@
                 <i class="fa fa-share-alt"></i>
             </div>
         </div>
-        <div class="config-options">
-            <label for="polylineName">Название линии</label>
-            <input type="text" id="polylineName" class="config-input" ng-model="polylineName" placeholder="Введите название" ng-change="changePolylineName()">
-            <div class="config-button" ng-show="selectedIndex && enablePolylines" ng-click="deleteSinglePolyline()">Удалить линию</div>
-        </div>
+    </div>
+    <div class="config-options" ng-show="selectedIndex && enablePolylines">
+        <label for="polylineName">Название линии</label>
+        <textarea id="polylineName" class="config-input" ng-model="polylineName" placeholder="Введите название" ng-change="changePolylineName()"></textarea>
+        <div class="config-button" ng-show="selectedIndex && enablePolylines" ng-click="deleteSinglePolyline()">Удалить линию</div>
     </div>
     <div class="save-button" ng-click="save()" ng-show="selectedIndex || markersData.length">Сохранить координаты</div>
-    <div class="delete-button" ng-show="markersData.length && enableMarkers" ng-click="deleteMarkers()">Удалить маркеры</div>
-    <div class="delete-button" ng-show="selectedIndex && enablePolylines" ng-click="deletePolylines()">Удалить все линии</div>
 </div>
 <div class="settings-type upload-config" ng-show="showUpload">
     <i class="fa fa-times" ng-click="showUpload = false"></i>
@@ -187,6 +185,16 @@
     <div class="after-menu-button" ng-click="setCenterFromAddress()">
         <i class="fa fa-eye"></i>
         <div class="helper">Показать место на карте</div>
+    </div>
+
+    <div class="after-menu-button danger" ng-show="markersData.length" ng-click="deleteMarkers()">
+        <i class="fa fa-map-marker"></i>
+        <div class="helper">Удалить с карты все маркеры</div>
+    </div>
+
+    <div class="after-menu-button danger" ng-show="selectedIndex" ng-click="deletePolylines()">
+        <i class="fa fa-share-alt"></i>
+        <div class="helper">Удалить с карты все линии</div>
     </div>
 
 </div>
