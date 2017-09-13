@@ -63,6 +63,10 @@
     <div class="config-options" ng-show="selectedIndex && enablePolylines">
         <label for="polylineName">Название линии</label>
         <textarea id="polylineName" class="config-input" ng-model="polylineName" placeholder="Введите название" ng-change="changePolylineName()"></textarea>
+        <div class="polyline-information">Расстояние: <span>{{polylineDistance}}</span></div>
+        <div class="polyline-information" ng-show="polylineType">Тип маршрута: <span>{{polylineType}}</span></div>
+        <div class="polyline-information" ng-show="polylineTime">Время: <span>{{polylineTime}}</span></div>
+
         <div class="config-button" ng-show="selectedIndex && enablePolylines" ng-click="deleteSinglePolyline()">Удалить линию</div>
     </div>
     <div class="save-button" ng-click="save()" ng-show="selectedIndex || markersData.length">Сохранить координаты</div>
@@ -240,11 +244,11 @@
         <div class="selected-route-type-text">{{getSelectedRouteType()}}</div>
 
         <input googleplace class="pac-input create-route-input" type="text" ng-model="key.value" ng-repeat="key in routeBoxes" placeholder="Точка {{$index + 1}}">
-        <div class="add-route-input" ng-click="routeBoxes.push({value: ''})">Добавить еще адрес</div>
-        {{routeBoxes}}
+        <div class="add-route-input" ng-click="routeBoxes.push({value:''})">Добавить еще адрес</div>
 
-        <div class="confirm-controls-wrap">
-            <div class="confirm-button agree-button" ng-click="createRoute(routeType); confirmCreateRoute = false">Так точно</div>
+        <div class="confirm-controls-wrap" ng-show="checkCreateRouteInputs()">
+            <input type="checkbox" ng-model="allowMarkers">
+            <div class="confirm-button agree-button" ng-click="createRoute(routeType, allowMarkers); confirmCreateRoute = false">Так точно</div>
         </div>
     </div>
 </div>

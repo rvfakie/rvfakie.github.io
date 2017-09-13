@@ -278,6 +278,12 @@
                 ga('send', 'pageview');
             };
             this.addPolylineMarker = function(polyline, latLng) {
+
+                polyline.distance = self.getPolylineGMapsInfo(index - 1);
+                $rootScope.$broadcast('polylineData', {
+                    polyline: polyline
+                });
+
                 this.marker = new google.maps.Marker({
                     position: latLng,
                     map: self.map,
@@ -305,6 +311,11 @@
 
                 google.maps.event.addListener(this.marker, 'drag', function (e) {
                     polyline.getPath().setAt(markerIndex-1, e.latLng);
+
+                    polyline.distance = self.getPolylineGMapsInfo(index - 1);
+                    $rootScope.$broadcast('polylineData', {
+                        polyline: polyline
+                    });
                 });
 
                 var dragStartCoord;
@@ -401,7 +412,7 @@
                 for (var x in polylineMarkersArray[ind-1]) {
                     polylineMarkersArray[ind-1][x].setMap(null)
                 }
-                polylineBubblesArray[ind-1][0].close();
+                // polylineBubblesArray[ind-1][0].close();
 
                 back = back.filter(function( obj ) {
                     return obj.data.polyline !== polylinesArray[ind-1];
@@ -409,15 +420,15 @@
 
                 polylinesArray.splice(ind-1, 1);
                 polylineMarkersArray.splice(ind-1, 1);
-                polylineBubblesArray.splice(ind-1, 1);
+                // polylineBubblesArray.splice(ind-1, 1);
 
                 //resetting polylines infowindows
-                for (var i = 0; i < polylineBubblesArray.length; i++) {
-                    polylineBubblesArray[i][0].setContent(
-                        '<div class="wndw" onclick="console.log('+ (i+1) +')">'+ (i+1).toString() +'</div>'
-                    );
-                    polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
-                }
+                // for (var i = 0; i < polylineBubblesArray.length; i++) {
+                //     polylineBubblesArray[i][0].setContent(
+                //         '<div class="wndw" onclick="console.log('+ (i+1) +')">'+ (i+1).toString() +'</div>'
+                //     );
+                //     polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
+                // }
 
                 if (!polylinesArray.length) {
                     newPolyline = true;
@@ -428,6 +439,11 @@
 
                 if (index >= 1) {
                     self.setPolylineSelectedColor(polylinesArray[index-1]);
+
+                    polylinesArray[index-1].distance = self.getPolylineGMapsInfo(index - 1);
+                    $rootScope.$broadcast('polylineData', {
+                        polyline: polylinesArray[index-1]
+                    });
                 }
 
                 $rootScope.$broadcast('setPolyline', {
@@ -451,15 +467,15 @@
                         polylineMarkersArray[m][x].setMap(null)
                     }
                 }
-                for (var b in polylineBubblesArray) {
-                    for (var c in polylineBubblesArray[b]) {
-                        polylineBubblesArray[c][0].close();
-                    }
-                }
+                // for (var b in polylineBubblesArray) {
+                //     for (var c in polylineBubblesArray[b]) {
+                //         polylineBubblesArray[c][0].close();
+                //     }
+                // }
 
                 polylinesArray = [];
                 polylineMarkersArray = [];
-                polylineBubblesArray = [];
+                // polylineBubblesArray = [];
                 index = 0;
 
                 $rootScope.$broadcast('setPolyline', {
@@ -492,6 +508,10 @@
             this.newPolyline = function() {
                 newPolyline = true;
                 $rootScope.$broadcast('newPolyline');
+            };
+            this.getPolylineGMapsInfo = function(ind) {
+                var distance = google.maps.geometry.spherical.computeLength(polylinesArray[ind].getPath().getArray());
+                return (distance / 1000).toFixed(1) + " км";
             };
 
             //FOR POLYGONS
@@ -607,24 +627,29 @@
                             lastAction.data.marker.setPosition(lastAction.data.latLng);
                             break;
                         case 'continuePolyline':
-                            var indexOfPolygon = polylinesArray.indexOf(lastAction.data.polyline);
+                            var indexOfPolyline = polylinesArray.indexOf(lastAction.data.polyline);
 
                             lastAction.data.polyline.getPath().pop();
                             lastAction.data.marker.setMap(null);
-                            polylineMarkersArray[indexOfPolygon].pop();
+                            polylineMarkersArray[indexOfPolyline].pop();
 
-                            if (!polylineMarkersArray[indexOfPolygon].length) {
-                                lastAction.data.window.close();
-                                polylineMarkersArray.splice(indexOfPolygon, 1);
-                                polylineBubblesArray.splice(indexOfPolygon, 1);
+                            lastAction.data.polyline.distance = self.getPolylineGMapsInfo(indexOfPolyline);
+                            $rootScope.$broadcast('polylineData', {
+                                polyline: lastAction.data.polyline
+                            });
+
+                            if (!polylineMarkersArray[indexOfPolyline].length) {
+                                // lastAction.data.window.close();
+                                polylineMarkersArray.splice(indexOfPolyline, 1);
+                                // polylineBubblesArray.splice(indexOfPolyline, 1);
                                 polylinesArray.pop();
 
-                                for (var i = 0; i < polylineBubblesArray.length; i++) {
-                                    polylineBubblesArray[i][0].setContent(
-                                        '<div class="wndw" onclick="console.log('+ (i+1) +')">'+ (i+1).toString() +'</div>'
-                                    );
-                                    polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
-                                }
+                                // for (var i = 0; i < polylineBubblesArray.length; i++) {
+                                //     polylineBubblesArray[i][0].setContent(
+                                //         '<div class="wndw" onclick="console.log('+ (i+1) +')">'+ (i+1).toString() +'</div>'
+                                //     );
+                                //     polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
+                                // }
                                 index = polylinesArray.length;
                                 if (index >= 1) {
                                     self.setPolylineSelectedColor(polylinesArray[index-1]);
@@ -641,8 +666,14 @@
                             }
                             break;
                         case 'dragPolylineMarker':
+                            var indexOfPolyline = polylinesArray.indexOf(lastAction.data.polyline);
+
                             lastAction.data.marker.setPosition(lastAction.data.latLng);
                             lastAction.data.polyline.getPath().setAt(lastAction.data.markerIndex -1, lastAction.data.latLng);
+                            lastAction.data.polyline.distance = self.getPolylineGMapsInfo(indexOfPolyline);
+                            $rootScope.$broadcast('polylineData', {
+                                polyline: lastAction.data.polyline
+                            });
                             break;
                     }
                     back.pop();
@@ -820,6 +851,10 @@
                 index = selectedIndex;
 
                 self.setPolylineSelectedColor(polylinesArray[index - 1]);
+
+                $rootScope.$broadcast('polylineData', {
+                    polyline: polylinesArray[index - 1]
+                });
 
                 ga('set', 'page', 'selected index');
                 ga('send', 'pageview');
@@ -1064,7 +1099,7 @@
             $scope.enableMarkers = true;
             $scope.enablePolylines = !$scope.enableMarkers;
             $scope.enablePolygons = !$scope.enableMarkers;
-            Map.togglePolylineWindows();
+            // Map.togglePolylineWindows();
         };
         $scope.enableP = function() {
             $scope.selectedMarkerIndex = null;
@@ -1073,7 +1108,7 @@
             $scope.enablePolylines = true;
             $scope.enableMarkers = !$scope.enablePolylines;
             $scope.enablePolygons = !$scope.enablePolylines;
-            Map.togglePolylineWindows(true);
+            // Map.togglePolylineWindows(true);
         };
         $scope.enableG = function() {
             $scope.enablePolygons = true;
@@ -1123,6 +1158,9 @@
         $scope.changePolylineName = function() {
             Map.setPolylineName($scope.polylineName);
             $scope.polylinesData[$scope.selectedIndex-1].name = $scope.polylineName;
+        };
+        $scope.getPolylineGMapsInfo = function(ind) {
+            Map.getPolylineGMapsInfo(ind);
         };
 
         $scope.selectMarker = function(index) {
@@ -1208,19 +1246,53 @@
             }
             return rType;
         };
-        $scope.routeBoxes = [{value: ''},{value: ''}];
-        $scope.createRoute = function(type) {
-            var output = [
-                {
-                    polylines: [
-                        {
-                            position: []
-                        }
-                    ]
-                    // ,
-                    // markers: []
+        $scope.checkCreateRouteInputs = function() {
+            for (var key in $scope.routeBoxes) {
+                if (!$scope.routeBoxes[key].value) {
+                    return;
                 }
-            ];
+            }
+            return true;
+        };
+        $scope.routeBoxes = [{value:''},{value:''}];
+        $scope.createRoute = function(type, markers) {
+            var output;
+
+            if (markers) {
+                output = [
+                    {
+                        markers: [],
+                        polylines: [
+                            {
+                                position: []
+                            }
+                        ]
+                    }
+                ];
+                for (var el in $scope.routeBoxes) {
+                    Map.geocoder.geocode( { 'address': $scope.routeBoxes[el].value}, function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            output[0].markers.push({
+                                position: {
+                                    lat: results[0].geometry.location.lat(),
+                                    lng: results[0].geometry.location.lng()
+                                }
+                            })
+                        }
+                    });
+                }
+            } else {
+                output = [
+                    {
+                        polylines: [
+                            {
+                                position: []
+                            }
+                        ]
+                    }
+                ];
+            }
+
 
             var wayPoints = [];
 
@@ -1231,7 +1303,6 @@
                     })
                 }
             }
-            console.log(wayPoints)
 
             var request = {
                 origin: $scope.routeBoxes[0].value,
@@ -1239,13 +1310,13 @@
                 travelMode: type,
                 waypoints: wayPoints,
                 optimizeWaypoints: true
+                // avoidTolls: true
             };
 
             var directionsService = new google.maps.DirectionsService();
 
             directionsService.route(request, function(result, status) {
                 if (status == 'OK') {
-
                     for (var k = 0; k < result.routes[0].overview_path.length; k++) {
                         output[0].polylines[0].position.push({
                             lat: result.routes[0].overview_path[k].lat(),
@@ -1253,10 +1324,21 @@
                         });
                     }
                     Map.load(output);
+                    $scope.polylineTime = result.routes[0].legs[0].duration.text;
+                    (function(){
+                        switch (type) {
+                            case 'WALKING':
+                                $scope.polylineType = 'Пешком';
+                                break;
+                            case 'DRIVING':
+                                $scope.polylineType = 'На машине';
+                                break;
+                        }
+                    })();
                 } else {
                     showAction('Невозможно построить маршрут по введенным адресам')
                 }
-                $scope.routeBoxes = [{value: ''},{value: ''}];
+                $scope.routeBoxes = [{value:''},{value:''}];
             });
         };
 
@@ -1297,6 +1379,14 @@
             $scope.glowing = false;
             $timeout(function() {
                 $scope.$apply()
+            })
+        });
+        $scope.$on('polylineData', function(event, data) {
+            $scope.polylineDistance = data.polyline.distance;
+            $scope.polylineTime = null;
+            $scope.polylineType = null;
+            $timeout(function() {
+                $scope.$apply();
             })
         });
 

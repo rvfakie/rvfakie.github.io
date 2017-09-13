@@ -276,6 +276,17 @@ body {
 		min-height: 60px;
 	}
 }
+.polyline-information {
+	font-size: 12px;
+	font-family: "Proxima Nova Bold", sans-serif;
+	text-transform: uppercase;
+	span {
+		font-family: "Proxima Nova", sans-serif;
+		text-transform: initial;
+		float: right;
+	}
+	margin-bottom: 20px;
+}
 .config-button {
 	text-align: center;
 	padding: 6px 0;
