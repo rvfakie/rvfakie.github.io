@@ -951,6 +951,11 @@ body.no-scroll {
 .agree-button {
   background: green; }
 
+.create-route-header {
+  font-family: "Proxima Nova Bold", sans-serif;
+  font-size: 14px;
+  text-transform: uppercase; }
+
 .copyright {
   position: fixed;
   bottom: 20px;

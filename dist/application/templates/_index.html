@@ -46,6 +46,7 @@
         <textarea id="markerName" class="config-input" ng-model="markerName" placeholder="Введите название" ng-change="changeMarkerName()"></textarea>
         <div class="config-button" ng-show="selectedMarkerIndex >= 0 && selectedMarkerIndex !== null" ng-click="deleteSingleMarker()">Удалить выбранный маркер</div>
     </div>
+    <div class="save-button" ng-show="enablePolylines" ng-click="confirmCreateRoute = true">Провести маршрут</div>
     <div class="settings-config" ng-show="selectedIndex && enablePolylines">
         <div class="config-header">Линии <i class="fa fa-plus" ng-class="{'active': glowing}" ng-click="newPolyline()"></i></div>
         <div class="config-element-wrapper">
@@ -175,7 +176,7 @@
     </div>
 
     <div class="searchbox-wrapper">
-        <input id="pac-input" class="controls" type="text" placeholder="Адрес">
+        <input class="controls pac-input" id="global-search" googleplace ng-model="emptyModel" type="text" placeholder="Адрес">
         <div class="setter-button" ng-click="setPinFromAddress()">
             <i class="fa fa-map-marker"></i>
             <div class="helper">Поставить <span ng-show="enableMarkers">маркер</span><span ng-show="enablePolylines">линию</span> по адресу</div>
@@ -224,6 +225,26 @@
         <div class="confirm-controls-wrap">
             <div class="confirm-button deny-button" ng-click="confirmIsVisible = false">Отменить</div>
             <div class="confirm-button agree-button">Так точно</div>
+        </div>
+    </div>
+</div>
+
+<div class="confirm-wrap create-route" ng-class="{'visible': confirmCreateRoute}">
+    <div class="confirm-fade" ng-click="confirmCreateRoute = false"></div>
+    <div class="confirm-block" ng-init="routeType = 'WALKING'">
+        <i class="fa fa-times" ng-click="confirmCreateRoute = false"></i>
+
+        <div class="create-route-header">Построение маршрута</div>
+        <input class="walking" type="radio" name="route-type" value="WALKING" ng-model="routeType">
+        <input class="car" type="radio" name="route-type" value="DRIVING" ng-model="routeType">
+        <div class="selected-route-type-text">{{getSelectedRouteType()}}</div>
+
+        <input googleplace class="pac-input create-route-input" type="text" ng-model="key.value" ng-repeat="key in routeBoxes" placeholder="Точка {{$index + 1}}">
+        <div class="add-route-input" ng-click="routeBoxes.push({value: ''})">Добавить еще адрес</div>
+        {{routeBoxes}}
+
+        <div class="confirm-controls-wrap">
+            <div class="confirm-button agree-button" ng-click="createRoute(routeType); confirmCreateRoute = false">Так точно</div>
         </div>
     </div>
 </div>

@@ -12,32 +12,3 @@ var showAction = function(text) {
         
     }
 };
-
-var showNamesInput = function(marker) {
-
-    $('.names-window input').val('');
-    $('.names-save-button, .names-wrap, .names-wrap i').off('click');
-
-    $('.names-window, .names-wrap').addClass('shown');
-
-    $('.names-window input').val(marker.text);
-
-    $('.names-window input').focus();
-
-
-    $('.names-save-button').on('click', function() {
-        marker.text = $('.names-window input').val();
-        hideNamesInput(marker);
-    });
-
-    $('.names-wrap, .names-wrap i').on('click', function() {
-        hideNamesInput(marker);
-    });
-
-
-};
-
-var hideNamesInput = function(marker) {
-    $('.names-window, .names-wrap').removeClass('shown');
-    marker.setOptions({animation: null});
-};

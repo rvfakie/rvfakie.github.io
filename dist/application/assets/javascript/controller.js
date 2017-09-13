@@ -37,6 +37,21 @@
         return data;
     });
 
+    app.directive('googleplace', function() {
+        return {
+            require: 'ngModel',
+            link: function(scope, element, attrs, model) {
+                this.inp = new google.maps.places.SearchBox(element[0]);
+
+                google.maps.event.addListener(this.inp, 'places_changed', function() {
+                    scope.$apply(function() {
+                        model.$setViewValue(element.val());
+                    });
+                });
+            }
+        };
+    });
+
     app.service('Map', function($q, $http, $rootScope, dataService, $timeout) {
         this.init = function(mapId) {
 
@@ -76,10 +91,6 @@
             this.map = new google.maps.Map(document.getElementById(mapId), options);
 
             this.geocoder = new google.maps.Geocoder();
-
-            var input = document.getElementById('pac-input');
-            var searchBox = new google.maps.places.SearchBox(input);
-            //this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
 
             this.addMarker = function(latLng, text) {
 
@@ -207,17 +218,48 @@
 
                 index = polylinesArray.length;
 
-                google.maps.event.addListener(this.polyline, 'click', function() {
+                google.maps.event.addListener(this.polyline, 'click', function(e) {
                     if (!markerLogic) {
                         var thisIndex = polylinesArray.indexOf(this);
 
                         if (index !== thisIndex+1) {
                             self.setIndex(thisIndex+1);
+                        } else {
+                            console.log('test')
+
+                            //TESTING
+
+                            var needle = {
+                                minDistance: 9999999999, //silly high
+                                index: -1,
+                                latlng: null
+                            };
+                            this.getPath().forEach(function(routePoint, index){
+                                var dist = google.maps.geometry.spherical.computeDistanceBetween(e.latLng, routePoint);
+                                if (dist < needle.minDistance){
+                                    needle.minDistance = dist;
+                                    needle.index = index;
+                                    needle.latlng = routePoint;
+                                }
+                            });
+                            // The closest point in the polyline
+                            console.log(needle.index);
+
+                            // TODO FIX PLZ
+                            this.getPath().b.splice(needle.index, 0, e.latLng);
+
+                            var temporaryData = self.dump();
+
+                            self.deletePolylines();
+                            self.deleteMarkers();
+
+                            self.load(JSON.parse(temporaryData));
                         }
 
                         $rootScope.$broadcast('selectPolyline', {
                             polylineIndex: thisIndex+1
                         });
+
                     }
                 });
 
@@ -289,22 +331,22 @@
 
                 //TODO set draggable false if markerLogic
 
-                var len = polyline.latLngs.b[0].b.length;
+                // var len = polyline.latLngs.b[0].b.length;
 
-                if (len < 2) {
-                    this.window = new google.maps.InfoWindow({
-                        content: '<div class="wndw" onclick="console.log('+ index +')">'+ index.toString() +'</div>'
-                    });
-                    if (polylineBubblesArray[index-1]) {
-                        polylineBubblesArray[index-1].push(this.window);
-                    } else {
-                        polylineBubblesArray.push([this.window]);
-                    }
-
-                    if (!markerLogic) {
-                        this.window.open(this.map, this.marker);
-                    }
-                }
+                // if (len < 2) {
+                //     this.window = new google.maps.InfoWindow({
+                //         content: '<div class="wndw" onclick="console.log('+ index +')">'+ index.toString() +'</div>'
+                //     });
+                //     if (polylineBubblesArray[index-1]) {
+                //         polylineBubblesArray[index-1].push(this.window);
+                //     } else {
+                //         polylineBubblesArray.push([this.window]);
+                //     }
+                //
+                //     if (!markerLogic) {
+                //         this.window.open(this.map, this.marker);
+                //     }
+                // }
 
                 back.push({
                     action: 'continuePolyline',
@@ -441,7 +483,7 @@
             this.togglePolylineWindows = function(bool) {
                 for (var i = 0; i < polylineBubblesArray.length; i++) {
                     if (bool) {
-                        polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
+                        //polylineBubblesArray[i][0].open(self.map, polylineMarkersArray[i][0]);
                     } else {
                         polylineBubblesArray[i][0].close();
                     }
@@ -688,6 +730,48 @@
                 }
             };
 
+            this.dump = function() {
+                var mkArray = [];
+                var plArray = [];
+                var output = '[';
+
+                if (markersArray.length) {
+                    for (var mk in markersArray) {
+                        mkArray.push({
+                            position: {
+                                lat: markersArray[mk].position.lat(),
+                                lng: markersArray[mk].position.lng()
+                            },
+                            text: markersArray[mk].text
+                        });
+                    }
+                    output += '{"markers":';
+                    output += JSON.stringify(mkArray);
+                    output +='}';
+                }
+                if (polylinesArray.length) {
+                    for (var i = 0; i < polylinesArray.length; i++) {
+                        var coord = polylinesArray[i].latLngs.b[0].b;
+
+                        plArray.push({
+                            position: coord,
+                            text: polylinesArray[i].name
+                        })
+
+                    }
+                    if (mkArray.length) {
+                        output +=',{"polylines":';
+                    } else {
+                        output +='{"polylines":';
+                    }
+                    output +=JSON.stringify(plArray);
+                    output +='}';
+                }
+                output += ']';
+
+                return output;
+            };
+
             this.setPinFromAddress = function(address) {
                 self.geocoder.geocode({'address': address}, function (results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
@@ -777,8 +861,16 @@
 
             document.addEventListener('keydown', keyDownHandler);
             function keyDownHandler(event) {
-                if (document.getElementById('pac-input') !== document.activeElement
-                    && document.getElementById('markerInp') !== document.activeElement
+                function check() {
+                    for (var el in document.querySelectorAll('.pac-input')) {
+                        if (document.querySelectorAll('.pac-input')[el] === document.activeElement) {
+                            return;
+                        }
+                    }
+                    return true;
+                }
+
+                if (check() && document.getElementById('markerInp') !== document.activeElement
                     && document.getElementById('uploadData') !== document.activeElement
                     && document.getElementById('polylineName') !== document.activeElement
                     && document.getElementById('markerName') !== document.activeElement) {
@@ -962,8 +1054,9 @@
         $scope.instructionsToggled = false;
         $scope.glowing = false;
         $scope.confirmIsVisible = false;
+        $scope.confirmCreateRoute = false;
 
-        var addressInput = document.getElementById('pac-input');
+        var addressInput = document.getElementById('global-search');
 
         Map.setListeners($scope.enableMarkers, $scope.enablePolylines);
 
@@ -1101,6 +1194,70 @@
                 $(document).unbind('confirm');
                 $('.agree-button').off('click');
             })
+        };
+
+        $scope.getSelectedRouteType = function() {
+            var rType = '';
+            switch ($scope.routeType) {
+                case 'WALKING':
+                    rType = 'Пешком'
+                    break;
+                case 'DRIVING':
+                    rType = 'На машине'
+                    break;
+            }
+            return rType;
+        };
+        $scope.routeBoxes = [{value: ''},{value: ''}];
+        $scope.createRoute = function(type) {
+            var output = [
+                {
+                    polylines: [
+                        {
+                            position: []
+                        }
+                    ]
+                    // ,
+                    // markers: []
+                }
+            ];
+
+            var wayPoints = [];
+
+            for (var i = 1;  i < $scope.routeBoxes.length; i++) {
+                if (i !== $scope.routeBoxes.length - 1) {
+                    wayPoints.push({
+                        location: $scope.routeBoxes[i].value
+                    })
+                }
+            }
+            console.log(wayPoints)
+
+            var request = {
+                origin: $scope.routeBoxes[0].value,
+                destination: $scope.routeBoxes[$scope.routeBoxes.length - 1].value,
+                travelMode: type,
+                waypoints: wayPoints,
+                optimizeWaypoints: true
+            };
+
+            var directionsService = new google.maps.DirectionsService();
+
+            directionsService.route(request, function(result, status) {
+                if (status == 'OK') {
+
+                    for (var k = 0; k < result.routes[0].overview_path.length; k++) {
+                        output[0].polylines[0].position.push({
+                            lat: result.routes[0].overview_path[k].lat(),
+                            lng: result.routes[0].overview_path[k].lng()
+                        });
+                    }
+                    Map.load(output);
+                } else {
+                    showAction('Невозможно построить маршрут по введенным адресам')
+                }
+                $scope.routeBoxes = [{value: ''},{value: ''}];
+            });
         };
 
         $scope.$on('selectPolyline', function(event, data) {
