@@ -1,6 +1,6 @@
 <div id="LAM_Map"></div>
 <div class="copyright">
-    <a href="mailto:rvfakie@gmail.com?subject=alphashape GMaps editor">fakie</a> | v.2.2
+    <a href="mailto:rvfakie@gmail.com?subject=alphashape GMaps editor">fakie</a> | v.2.3
 </div>
 <div class="settings-wrap top left">
     <div class="undo-redo-wrap" ng-click="undo()">
@@ -239,16 +239,32 @@
         <i class="fa fa-times" ng-click="confirmCreateRoute = false"></i>
 
         <div class="create-route-header">Построение маршрута</div>
-        <input class="walking" type="radio" name="route-type" value="WALKING" ng-model="routeType">
-        <input class="car" type="radio" name="route-type" value="DRIVING" ng-model="routeType">
-        <div class="selected-route-type-text">{{getSelectedRouteType()}}</div>
-
-        <input googleplace class="pac-input create-route-input" type="text" ng-model="key.value" ng-repeat="key in routeBoxes" placeholder="Точка {{$index + 1}}">
+        <div class="create-route-inputs-container">
+            <div class="create-route-input-wrapper">
+                <input class="walking" type="radio" name="route-type" value="WALKING" ng-model="routeType">
+                <div class="create-route-radio-holder">
+                    <div class="fa fa-child"></div>
+                </div>
+            </div>
+            <div class="create-route-input-wrapper">
+                <input class="car" type="radio" name="route-type" value="DRIVING" ng-model="routeType">
+                <div class="create-route-radio-holder">
+                    <div class="fa fa-car"></div>
+                </div>
+            </div>
+        </div>
+        <div class="create-route-small-header">Тип маршрута: <span>{{getSelectedRouteType()}}</span></div>
+        <div class="create-route-input-text-wrapper" ng-repeat="key in routeBoxes">
+            <input googleplace class="pac-input create-route-input" type="text" ng-model="key.value" placeholder="Точка {{$index + 1}}">
+            <span class="remove-place" ng-show="routeBoxes.length > 2" ng-click="routeBoxes.splice($index, 1)">x</span>
+            <div class="fa fa-arrow-down" ng-show="$index === routeBoxes.length - 2"></div>
+            <div class="fa fa-plus" ng-show="$index !== routeBoxes.length - 2 && !$last"></div>
+        </div>
         <div class="add-route-input" ng-click="routeBoxes.push({value:''})">Добавить еще адрес</div>
 
-        <div class="confirm-controls-wrap" ng-show="checkCreateRouteInputs()">
+        <div class="confirm-controls-wrap" ng-show="checkCreateRouteInputs() && routeBoxes.length > 1">
             <input type="checkbox" ng-model="allowMarkers">
-            <div class="confirm-button agree-button" ng-click="createRoute(routeType, allowMarkers); confirmCreateRoute = false">Так точно</div>
+            <div class="confirm-button create-button" ng-click="createRoute(routeType, allowMarkers); confirmCreateRoute = false">Построить</div>
         </div>
     </div>
 </div>

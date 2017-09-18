@@ -961,10 +961,95 @@ body.no-scroll {
 .agree-button {
   background: green; }
 
+.create-route input[type="radio"] {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer; }
+  .create-route input[type="radio"]:checked + .create-route-radio-holder {
+    background: #1f1f1f !important;
+    color: #fff; }
+  .create-route input[type="radio"]:hover + .create-route-radio-holder {
+    background: #3f3f3f;
+    color: #fff; }
+
+.create-route input[type="text"] {
+  font-size: 14px;
+  border: none;
+  border-bottom: 1px solid #3f3f3f;
+  padding: 6px 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  outline: none;
+  border-radius: 0;
+  font-family: "Proxima Nova", sans-serif;
+  width: 250px;
+  padding-right: 13px;
+  text-overflow: ellipsis; }
+
+.create-route-input-text-wrapper {
+  position: relative; }
+  .create-route-input-text-wrapper div {
+    font-size: 12px;
+    display: block;
+    text-align: center;
+    margin: 13px 0 0; }
+
+.remove-place {
+  font-size: 14px;
+  position: absolute;
+  top: 5px;
+  right: 0;
+  cursor: pointer; }
+
+.add-route-input {
+  margin-top: 16px;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 12px;
+  text-decoration: underline; }
+  .add-route-input:hover {
+    text-decoration: none; }
+
+.create-route-input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  vertical-align: middle; }
+
+.create-route-inputs-container {
+  text-align: center;
+  margin-bottom: 20px; }
+
+.create-route-radio-holder {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 35px;
+  border-radius: 50px;
+  color: #000; }
+  .create-route-radio-holder div {
+    font-size: 15px; }
+
 .create-route-header {
   font-family: "Proxima Nova Bold", sans-serif;
   font-size: 14px;
+  margin-bottom: 20px;
   text-transform: uppercase; }
+
+.create-route-small-header {
+  font-family: "Proxima Nova Bold", sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 10px; }
+
+.create-button {
+  background: #3f3f3f; }
 
 .copyright {
   position: fixed;
