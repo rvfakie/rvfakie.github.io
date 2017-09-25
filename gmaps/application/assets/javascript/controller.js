@@ -1028,12 +1028,12 @@
             requireBase: false
         });
 
-        $urlRouterProvider.otherwise('/gmaps');
+        $urlRouterProvider.otherwise('/');
 
         $stateProvider
 
             .state('index', {
-                url: '/gmaps',
+                url: '/',
                 templateUrl: 'application/templates/main.html',
                 controller: 'indexCtrl'
             })
