@@ -1032,7 +1032,7 @@
 
         $stateProvider
 
-            .state('index', {
+            .state('/', {
                 url: '/',
                 templateUrl: 'application/templates/main.html',
                 controller: 'indexCtrl'
