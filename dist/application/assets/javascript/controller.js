@@ -1023,17 +1023,17 @@
 
     app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: true
-        });
+        // $locationProvider.html5Mode({
+        //     enabled: false,
+        //     requireBase: false
+        // });
 
-        $urlRouterProvider.otherwise('/dist');
+        $urlRouterProvider.otherwise('/');
 
         $stateProvider
 
             .state('index', {
-                url: '/dist',
+                url: '/',
                 templateUrl: 'application/templates/main.html',
                 controller: 'indexCtrl'
             })
