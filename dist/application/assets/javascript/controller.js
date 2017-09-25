@@ -1034,7 +1034,7 @@
 
             .state('dist', {
                 url: '/dist',
-                templateUrl: 'application/templates/_index.html',
+                templateUrl: 'dist/application/templates/_index.html',
                 controller: 'indexCtrl'
             })
 
