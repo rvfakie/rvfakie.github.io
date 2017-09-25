@@ -1034,7 +1034,7 @@
 
             .state('index', {
                 url: '/',
-                templateUrl: 'application/templates/_index.html',
+                templateUrl: 'application/templates/main.html',
                 controller: 'indexCtrl'
             })
 
