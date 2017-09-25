@@ -1025,14 +1025,14 @@
 
         $locationProvider.html5Mode({
             enabled: true,
-            requireBase: false
+            requireBase: true
         });
 
         $urlRouterProvider.otherwise('/dist');
 
         $stateProvider
 
-            .state('dist', {
+            .state('/', {
                 url: '/dist',
                 templateUrl: 'application/templates/_index.html',
                 controller: 'indexCtrl'
