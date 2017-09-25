@@ -1025,7 +1025,7 @@
 
         $locationProvider.html5Mode({
             enabled: true,
-            requireBase: false
+            requireBase: true
         });
 
         $urlRouterProvider.otherwise('/dist');
