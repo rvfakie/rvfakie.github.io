@@ -1028,7 +1028,7 @@
             requireBase: false
         });
 
-        $urlRouterProvider.otherwise('/dist');
+        $urlRouterProvider.otherwise('/dist/');
 
         $stateProvider
 
