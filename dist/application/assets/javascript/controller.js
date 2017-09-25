@@ -1032,7 +1032,7 @@
 
         $stateProvider
 
-            .state('dist', {
+            .state('/', {
                 url: '/dist',
                 templateUrl: 'application/templates/_index.html',
                 controller: 'indexCtrl'
