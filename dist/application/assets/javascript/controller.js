@@ -1024,7 +1024,8 @@
     app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
         $locationProvider.html5Mode({
-            enabled: true
+            enabled: true,
+            requireBase: false
         });
 
         $urlRouterProvider.otherwise('/');
@@ -1035,12 +1036,6 @@
                 url: '/',
                 templateUrl: 'application/templates/_index.html',
                 controller: 'indexCtrl'
-            })
-
-            .state('articles', {
-                url: '/articles',
-                templateUrl: 'application/templates/articles.html',
-                controller: ''
             })
 
             // nested view category
@@ -1074,8 +1069,6 @@
         // $http.get('application/data/json/data.json').success(function(data) {
         //     $scope.data = data;
         // });
-        // ga('set', 'page', 'index viewed');
-        // ga('send', 'pageview');
     });
     
     app.controller('indexCtrl', function (Map, $scope, $rootScope, $state, $timeout) {
