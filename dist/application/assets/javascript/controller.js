@@ -1028,12 +1028,12 @@
             requireBase: false
         });
 
-        $urlRouterProvider.otherwise('/dist/');
+        $urlRouterProvider.otherwise('/');
 
         $stateProvider
 
             .state('index', {
-                url: '/dist',
+                url: '/',
                 templateUrl: 'application/templates/main.html',
                 controller: 'indexCtrl'
             })
