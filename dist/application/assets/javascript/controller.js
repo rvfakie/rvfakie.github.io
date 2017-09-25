@@ -1024,8 +1024,7 @@
     app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
         $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
+            enabled: true
         });
 
         $urlRouterProvider.otherwise('/dist');
