@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="37px" height="61px" viewBox="0 0 37 61" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46 (44423) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#E73232" offset="0%"></stop>
+            <stop stop-color="#6F0505" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2" points="16.4416872 60 0 11.4277027 8.09720434 5.77986514 16.4512124 0 24.6083557 5.77986514 33.0372222 11.4277027"></polygon>
+        <filter x="-7.6%" y="-2.5%" width="115.1%" height="110.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(2.000000, 0.000000)">
+            <g id="Triangle">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+            </g>
+            <polygon id="Triangle" stroke="#FFFFFF" stroke-width="1.5" points="16.4956539 37.2262201 9 15.1855525 12.7091751 12.6227313 16.4999762 10 20.2014458 12.6227313 24.0262154 15.1855525"></polygon>
+        </g>
+    </g>
+</svg>
