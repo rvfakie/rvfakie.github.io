@@ -145,11 +145,12 @@ a {
   margin-top: 40px;
   font-size: 18px;
   line-height: 24px; }
-  .default-text a {
-    text-decoration: underline;
-    color: #0366d6;
-    cursor: pointer;
-    -webkit-transition: color .25s;
-    transition: color .25s; }
-    .default-text a:hover {
-      color: #5f5f5f; }
+
+.default-link {
+  text-decoration: underline;
+  color: #0366d6;
+  cursor: pointer;
+  -webkit-transition: color .25s;
+  transition: color .25s; }
+  .default-link:hover {
+    color: #5f5f5f; }

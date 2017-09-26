@@ -38,13 +38,16 @@
 
     });
      
-    app.controller('mainCtrl', function($scope, $http, $rootScope, $state, $timeout) {
+    app.controller('mainCtrl', function($scope, $http, $rootScope, $state, $timeout, $window) {
         // $http.get('application/data/json/data.json').success(function(data) {
         //     $scope.data = data;
         // });
         $timeout(function() {
             $scope.loaded = true;
         }, 600)
+        $scope.redirectToExternalUrl = function(url) {
+            $window.open($window.location.href + '/' + url, '_blank')
+        }
     });
     
     app.controller('indexCtrl', function ($scope, $rootScope, $state, $timeout) {
