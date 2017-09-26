@@ -168,6 +168,7 @@
                 }
                 if (ind >= 0 && ind !== null) {
                     markersArray[ind].setOptions({animation: google.maps.Animation.BOUNCE});
+                    self.map.panTo({lat: markersArray[ind].position.lat(), lng: markersArray[ind].position.lng()})
                 }
             };
             this.deleteMarkers = function() {
@@ -1402,6 +1403,11 @@
                 $scope.selectedMarkerIndex = data.index;
                 $scope.markerName = Map.getMarkerName(data.index);
                 Map.selectMarker(data.index);
+                $timeout(function() {
+                    var container = $('.config-element-wrapper');
+                    var scrollTo = $('.config-element.selected');
+                    container.animate({scrollTop: scrollTo.offset().top - container.offset().top + container.scrollTop(), scrollLeft: 0},300);
+                }, 50)
             } else {
                 $scope.selectedMarkerIndex = null;
                 Map.selectMarker(null);
