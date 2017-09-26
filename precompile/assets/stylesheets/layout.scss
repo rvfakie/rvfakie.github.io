@@ -1,6 +1,7 @@
 .flex-container {
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: 40px;
 	> div {
 		margin-left: 20px;
 		&:first-child {
@@ -47,7 +48,7 @@
     }
 }
 
-@media (max-width: 1320px) {
+@media (max-width: 1020px) {
 	.flex-container {
 		flex-wrap: wrap;
 		div[data-col="1"], div[data-col="2"], div[data-col="3"], div[data-col="4"], div[data-col="5"], div[data-col="6"] {

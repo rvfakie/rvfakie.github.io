@@ -71,7 +71,20 @@ a {
           box-sizing: border-box; }
 
 .header-left-block {
-  font-size: 18px; }
+  text-transform: uppercase;
+  font-family: "Phosphate", sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  -webkit-transition: .25s;
+  transition: .25s;
+  font-weight: 700; }
+  .header-left-block:hover {
+    background: url(../images/gif.gif) no-repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: white;
+    background-size: 300px 700px; }
 
 .header-right-block {
   display: -webkit-box;

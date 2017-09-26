@@ -4,7 +4,8 @@
   display: flex;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
-          justify-content: space-between; }
+          justify-content: space-between;
+  margin-bottom: 40px; }
   .flex-container > div {
     margin-left: 20px; }
     .flex-container > div:first-child {
@@ -46,7 +47,7 @@
       border-bottom: 2px solid #979797;
       margin-right: 24px; }
 
-@media (max-width: 1320px) {
+@media (max-width: 1020px) {
   .flex-container {
     -ms-flex-wrap: wrap;
         flex-wrap: wrap; }
