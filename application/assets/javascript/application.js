@@ -46,7 +46,7 @@
             $scope.loaded = true;
         }, 600)
         $scope.redirectToExternalUrl = function(url) {
-            $window.open($window.location.href + '/' + url, '_blank')
+            $window.open(url, '_blank')
         }
     });
     
