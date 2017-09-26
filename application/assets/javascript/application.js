@@ -9,14 +9,18 @@
             requireBase: false
         });
 
-        $urlRouterProvider.otherwise('/about');
+        $urlRouterProvider.otherwise('/');
 
         $stateProvider
 
-            .state('/', {
-                url: '/about',
+            .state('about', {
+                url: '/',
                 templateUrl: 'application/templates/about.html',
                 controller: 'indexCtrl'
+            })
+            .state('browse', {
+                url: '/',
+                templateUrl: 'application/templates/browse.html'
             })
 
             // nested view category

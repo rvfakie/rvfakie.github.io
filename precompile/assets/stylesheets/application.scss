@@ -91,7 +91,7 @@ $headerBorder: 2px;
 	width: 100vw;
 	height: calc(100vh - #{$headerHeight} - #{$headerBorder});
     background: url(../images/branding-hollow.svg) no-repeat transparent;
-    transition: background 1.5s, opacity 1.5s ease-out;
+    transition: background 1s ease-out, opacity .5s ease-out;
     opacity: .6;
     background-position: center;
     background-size: 100vh;
@@ -105,9 +105,12 @@ $headerBorder: 2px;
 }
 .inject-container {
 	opacity: 1;
-	transition: opacity 1s;
+	transition: opacity .15s;
 	max-width: 1280px;
 	margin: 0 auto;
+	position: absolute;
+	left: 0;
+    right: 0;
 	&.ng-hide {
 		opacity: 0;
 		display: none;
@@ -148,4 +151,13 @@ $headerBorder: 2px;
 	margin-top: 40px;
 	font-size: 18px;
 	line-height: 24px;
+	a {
+		text-decoration: underline;
+		color: #0366d6;
+		cursor: pointer;
+		transition: color .25s;
+		&:hover {
+			color: #5f5f5f;
+		}
+	}
 }
