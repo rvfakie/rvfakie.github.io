@@ -1,21 +1,36 @@
+
+<!DOCTYPE html>
 <html>
 	<head>
-		<title>index</title>
-		<script type="text/javascript">
-			(function() {
-				var sites = [
-					{
-						name: 'gmaps',
-						link: '/gmaps',
-						image: '',
-						description: 'Gmaps custom builder'
-					}
-				];
-				for (var s in sites) {
-					document.write('<a href="'+ sites[s].link +'">'+ sites[s].name +'</a>')
-				}
-			})()
-		</script>
+	    <title>fakie | index</title>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="application/assets/images/favicon.png" type="image/png">
+	    <link href="application/assets/stylesheets/application.css" rel="stylesheet">
 	</head>
-	<body></body>
+	<body class="antialiasing" ng-app="applicationModule" ng-controller="mainCtrl">
+
+		
+		<div class="header">
+			<div class="header-left-block">fakie development</div>
+			<div class="header-right-block">
+				<div ui-sref="about" ui-sref-active="active">About</div>
+				<div>Browse</div>
+				<div>Contact</div>
+			</div>
+		</div>
+		<div class="branding-background" ng-class="{'loaded': loaded}"></div>
+
+		<!-- inject place -->
+		<div class="inject-container" ui-view ng-hide="!loaded"></div>
+		<!-- -->
+
+
+		<script src="application/components/javascript/angular-1-5-5.min.js"></script>
+		<script src="application/components/javascript/jquery-2-2-2.min.js"></script>
+		<script src="application/components/javascript/angular-ui-router.js"></script>
+		<script src="application/components/javascript/angular-animate-1-5-5.min.js"></script>
+		<script src="application/assets/javascript/mechanics.js"></script>
+		<script src="application/assets/javascript/application.js"></script>
+	</body>
 </html>
