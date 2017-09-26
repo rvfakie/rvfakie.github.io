@@ -895,7 +895,7 @@ body.no-scroll {
   .confirm-wrap.visible {
     pointer-events: all;
     opacity: 1; }
-    .confirm-wrap.visible .confirm-block {
+    .confirm-wrap.visible .confirm-block, .confirm-wrap.visible .create-route-block {
       -webkit-transform: translate3d(0, 0, 0);
               transform: translate3d(0, 0, 0); }
 
@@ -917,7 +917,7 @@ body.no-scroll {
           transform: translate3d(0, -50px, 0);
   -webkit-box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
           box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
-  max-width: 350px;
+  max-width: 250px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   text-align: left;
@@ -961,6 +961,27 @@ body.no-scroll {
 .agree-button {
   background: green; }
 
+.create-route-block {
+  background: #fff;
+  padding: 16px;
+  -webkit-transition: .35s ease-out;
+  transition: .35s ease-out;
+  -webkit-transform: translate3d(0, -50px, 0);
+          transform: translate3d(0, -50px, 0);
+  -webkit-box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  text-align: left;
+  position: relative; }
+  .create-route-block i {
+    position: absolute;
+    right: 3px;
+    top: 1px;
+    color: #c7c7c7;
+    font-size: 18px;
+    cursor: pointer; }
+
 .create-route input[type="radio"] {
   opacity: 0;
   width: 100%;
@@ -986,7 +1007,7 @@ body.no-scroll {
   outline: none;
   border-radius: 0;
   font-family: "Proxima Nova", sans-serif;
-  width: 250px;
+  width: 400px;
   padding-right: 13px;
   text-overflow: ellipsis; }
 
