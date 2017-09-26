@@ -4,9 +4,11 @@
 	<head>
 	    <title>fakie | index</title>
 	    <meta charset="UTF-8">
+	    <script>(location.hostname === 'localhost') ? document.write('<base href="/">') : document.write('<base href="'+ location.pathname +'">');</script>
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="application/assets/images/favicon.png" type="image/png">
 	    <link href="application/assets/stylesheets/application.css" rel="stylesheet">
+	    <link href="application/assets/stylesheets/layout.css" rel="stylesheet">
 	</head>
 	<body class="antialiasing" ng-app="applicationModule" ng-controller="mainCtrl">
 

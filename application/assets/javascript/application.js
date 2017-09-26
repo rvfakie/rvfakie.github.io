@@ -9,12 +9,12 @@
             requireBase: false
         });
 
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/about');
 
         $stateProvider
 
             .state('about', {
-                url: '/',
+                url: '/about',
                 templateUrl: 'application/templates/about.html',
                 controller: 'indexCtrl'
             })
