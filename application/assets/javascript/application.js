@@ -13,7 +13,7 @@
 
         $stateProvider
 
-            .state('about', {
+            .state('/', {
                 url: '/about',
                 templateUrl: 'application/templates/about.html',
                 controller: 'indexCtrl'
