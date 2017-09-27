@@ -20,7 +20,8 @@
             })
             .state('browse', {
                 url: '/',
-                templateUrl: 'application/templates/browse.html'
+                templateUrl: 'application/templates/browse.html',
+                controller: 'browseCtrl'
             })
 
             // nested view category
@@ -42,6 +43,7 @@
         // $http.get('application/data/json/data.json').success(function(data) {
         //     $scope.data = data;
         // });
+        var inter;
         $timeout(function() {
             $scope.loaded = true;
         }, 600)
@@ -49,6 +51,10 @@
             $window.open(url, '_blank')
         }
     });
+
+    app.controller('browseCtrl', function ($scope, $rootScope, $state, $timeout, $interval) {
+        showAction(false);
+    })
     
     app.controller('indexCtrl', function ($scope, $rootScope, $state, $timeout, $interval) {
 
@@ -56,17 +62,27 @@
         $scope.toolsQuery = ['javascript', 'angular', 'css3', 'html5'];
         $scope.usedTools = [];
         var len = 0;
-        $(document).ready(function() {
-            setTimeout(function() {
+        
+        
+        showAction = function(bool) {
+            $timeout(function() {
+                if (bool === false) {
+                    clearInterval(inter);
+                    console.log('clearing interval')
+                    return;
+                }
+                console.log('tes')
 
                 textAction();
 
-                setInterval(function() {
+                inter = setInterval(function() {
                     textAction();
                 }, 7000);
 
             }, 2000);
-        })
+        }
+
+        showAction();
 
         getRandomInt = function(min, max) {
           return Math.floor(Math.random() * (max - min + 1)) + min;
