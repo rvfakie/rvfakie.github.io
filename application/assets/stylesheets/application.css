@@ -85,7 +85,7 @@ a {
 
 .header-left-block {
   text-transform: uppercase;
-  font-family: 'Bowlby One SC', cursive;
+  font-family: 'Proxima Nova Bold', sans-serif;
   font-size: 28px;
   letter-spacing: 2px;
   cursor: pointer;
@@ -115,7 +115,7 @@ a {
       color: #0366d6; }
 
 .branding-background {
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: -webkit-calc(100vh - 52px - 2px);
   height: calc(100vh - 52px - 2px);
@@ -125,8 +125,7 @@ a {
   opacity: .6;
   background-position: center;
   background-size: 100vh;
-  z-index: -1;
-  background-attachment: fixed; }
+  z-index: -1; }
   .branding-background.loaded {
     background-position: center top;
     background-size: 180vh;
@@ -182,24 +181,59 @@ a {
   .default-link:hover {
     color: #5f5f5f; }
 
-.code {
-  font-size: 90px;
+.tools {
+  font-size: 48px;
   font-family: "Proxima Nova Bold";
-  text-transform: uppercase;
-  position: absolute;
-  left: 40px;
-  top: -100px;
-  width: 100%;
-  height: -webkit-calc(100% + 100px);
-  height: calc(100% + 100px);
-  overflow-y: hidden;
-  min-height: 310px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -webkit-box-align: center;
       -ms-flex-align: center;
-          align-items: center; }
+          align-items: center;
+  height: 100%;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s; }
+  .tools.hidden {
+    opacity: 0; }
+
+.tools-wrapper {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  opacity: 0;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s; }
+  .tools-wrapper.shown {
+    opacity: 1; }
+
+.tool {
+  width: 50px;
+  height: 50px;
+  margin: 0 10px;
+  background-size: contain !important;
+  background-repeat: no-repeat !important; }
+  .tool.tool-javascript {
+    background: url("../images/js-img.png"); }
+  .tool.tool-angular {
+    background: url("../images/angular-img.png"); }
+  .tool.tool-html5 {
+    background: url("../images/html-img.png"); }
+  .tool.tool-css3 {
+    background: url("../images/css-img.png"); }
 
 @media (max-width: 1320px) {
   .header {
@@ -213,11 +247,6 @@ a {
     display: none; }
   .header-small-logo {
     display: block; }
-  .code {
-    position: relative;
-    left: 0;
-    top: 0;
-    height: 165px;
-    min-height: auto;
-    line-height: 54px;
-    font-size: 36px; } }
+  .tools {
+    height: 60px;
+    font-size: 24px; } }
