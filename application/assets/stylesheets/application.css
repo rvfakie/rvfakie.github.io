@@ -1,4 +1,5 @@
 /* MAIN STYLES */
+@import url("https://fonts.googleapis.com/css?family=Bowlby+One+SC");
 * {
   padding: 0;
   margin: 0; }
@@ -70,21 +71,33 @@ a {
   -webkit-box-sizing: border-box;
           box-sizing: border-box; }
 
+.header-small-logo {
+  display: none;
+  width: 50px;
+  height: 50px;
+  background: url("../images/branding-hollow.svg") no-repeat center transparent;
+  background-size: contain;
+  cursor: pointer;
+  -webkit-transition: .25s;
+  transition: .25s; }
+  .header-small-logo:hover {
+    opacity: .8; }
+
 .header-left-block {
   text-transform: uppercase;
-  font-family: "Phosphate", sans-serif;
+  font-family: 'Bowlby One SC', cursive;
   font-size: 28px;
   letter-spacing: 2px;
   cursor: pointer;
   -webkit-transition: .25s;
   transition: .25s;
-  font-weight: 700; }
+  font-weight: 400; }
   .header-left-block:hover {
     background: url(../images/gif.gif) no-repeat;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     color: white;
-    background-size: 300px 700px; }
+    background-size: 100% 300px; }
 
 .header-right-block {
   display: -webkit-box;
@@ -96,7 +109,8 @@ a {
     font-size: 14px;
     cursor: pointer;
     -webkit-transition: color .25s;
-    transition: color .25s; }
+    transition: color .25s;
+    font-family: "Proxima Nova Bold", sans-serif; }
     .header-right-block div.active {
       color: #0366d6; }
 
@@ -118,15 +132,19 @@ a {
     background-size: 180vh;
     opacity: .03; }
 
+.content-wrapper {
+  width: 100vw;
+  overflow-x: hidden; }
+
 .inject-container {
-  opacity: 1;
-  -webkit-transition: opacity .15s;
-  transition: opacity .15s;
+  /*opacity: 1;
+	transition: opacity .15s;*/
   max-width: 1280px;
   margin: 0 auto;
-  position: absolute;
-  left: 0;
-  right: 0; }
+  /*position: absolute;
+	left: 0;
+    right: 0;*/
+  /*overflow: hidden;*/ }
   .inject-container.ng-hide {
     opacity: 0;
     display: none; }
@@ -139,25 +157,21 @@ a {
   .inject-container.ng-hide-remove-active {
     opacity: 0; }
 
-@media (max-width: 1320px) {
-  .header {
-    max-width: none;
-    padding: 0 20px; }
-  .inject-container {
-    padding: 0 20px; } }
-
 .large-heading {
-  font-family: "Phosphate", sans-serif;
-  font-weight: 700;
+  font-family: 'Bowlby One SC', cursive;
+  font-weight: 400;
+  text-transform: uppercase;
   font-size: 36px;
   line-height: 36px;
   letter-spacing: 1px;
   color: #3F3F3F; }
 
 .default-text {
-  margin-top: 40px;
   font-size: 18px;
-  line-height: 24px; }
+  line-height: 24px;
+  margin-bottom: 20px; }
+  .default-text:last-child {
+    margin-bottom: 0; }
 
 .default-link {
   text-decoration: underline;
@@ -167,3 +181,43 @@ a {
   transition: color .25s; }
   .default-link:hover {
     color: #5f5f5f; }
+
+.code {
+  font-size: 90px;
+  font-family: "Proxima Nova Bold";
+  text-transform: uppercase;
+  position: absolute;
+  left: 40px;
+  top: -100px;
+  width: 100%;
+  height: -webkit-calc(100% + 100px);
+  height: calc(100% + 100px);
+  overflow-y: hidden;
+  min-height: 310px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+
+@media (max-width: 1320px) {
+  .header {
+    max-width: none;
+    padding: 0 20px; }
+  .inject-container {
+    padding: 0 20px; } }
+
+@media (max-width: 1020px) {
+  .header-left-block {
+    display: none; }
+  .header-small-logo {
+    display: block; }
+  .code {
+    position: relative;
+    left: 0;
+    top: 0;
+    height: 165px;
+    min-height: auto;
+    line-height: 54px;
+    font-size: 36px; } }

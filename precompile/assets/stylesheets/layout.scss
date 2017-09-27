@@ -4,6 +4,8 @@
 	margin-bottom: 40px;
 	> div {
 		margin-left: 20px;
+		margin-top: 40px;
+		position: relative;
 		&:first-child {
 			margin-left: 0 !important;
 		}
@@ -25,6 +27,9 @@
 	}
 	div[data-col="6"] {
 		width: 100%;
+	}
+	div[data-col-empty] {
+		margin-top: 0;
 	}
 }
 

@@ -7,7 +7,9 @@
           justify-content: space-between;
   margin-bottom: 40px; }
   .flex-container > div {
-    margin-left: 20px; }
+    margin-left: 20px;
+    margin-top: 40px;
+    position: relative; }
     .flex-container > div:first-child {
       margin-left: 0 !important; }
   .flex-container div[data-col="1"] {
@@ -22,6 +24,8 @@
     width: 83.33332%; }
   .flex-container div[data-col="6"] {
     width: 100%; }
+  .flex-container div[data-col-empty] {
+    margin-top: 0; }
 
 .heading-wrap {
   display: -webkit-box;

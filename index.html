@@ -15,6 +15,7 @@
 		
 		<div class="header">
 			<div class="header-left-block" ui-sref="about">fakie development</div>
+			<div class="header-small-logo" ui-sref="about"></div>
 			<div class="header-right-block">
 				<div ui-sref="about" ui-sref-active="active">About</div>
 				<div ui-sref="browse" ui-sref-active="active">Browse</div>
@@ -23,9 +24,12 @@
 		</div>
 		<div class="branding-background" ng-class="{'loaded': loaded}"></div>
 
-		<!-- inject place -->
-		<div class="inject-container" ui-view ng-hide="!loaded"></div>
-		<!-- -->
+		<div class="content-wrapper">
+			<!-- inject place -->
+			<div class="inject-container" ui-view ng-hide="!loaded"></div>
+			<!-- -->
+		</div>
+		
 
 
 		<script src="application/components/javascript/angular-1-5-5.min.js"></script>
