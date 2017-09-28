@@ -34,7 +34,7 @@
 		</div>
 	</div>
 		<div class="car-info-menu">
-			<span>Навигация <img src="images/bmw_logo.png"><div class="model-caption" onclick="goToAction($(this)); closeMobileCarInfoMenu(this)" data-href="car_th_1" ng-repeat="(key, value) in carModel | toArray | filter:models">{{ value.model }}</div></span>
+			<span>Навигация <img src="application/assets/images/bmw_logo.png"><div class="model-caption" onclick="goToAction($(this)); closeMobileCarInfoMenu(this)" data-href="car_th_1" ng-repeat="(key, value) in carModel | toArray | filter:models">{{ value.model }}</div></span>
 			<ul>
 				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_1" data-href="car_th_1">Описание</a></li>
 				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_2" data-href="car_th_2">Общая информация</a></li>

@@ -13,6 +13,11 @@
 
 	app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
+		$locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+        });
+
 		$urlRouterProvider.otherwise('/');
 
 		$stateProvider
@@ -20,7 +25,7 @@
 		// HOME STATES AND NESTED VIEWS ========================================
 			.state('cars', {
 				url: '/',
-				templateUrl: 'templates/cars.html'
+				templateUrl: 'application/templates/cars.html'
 			})
 
 			// .state('cars', {
@@ -30,31 +35,9 @@
 
 			.state('rims', {
 				url: '/rims',
-				templateUrl: 'templates/rims.html'
+				templateUrl: 'application/templates/rims.html'
 			})
 
-			// nested list with custom controller
-			.state('home.list', {
-				url: '/list',
-				templateUrl: 'templates/partial-home-list.html',
-				controller: function($scope) {
-					$scope.dogs = ['Bernese', 'Husky', 'Goldendoodle'];
-				}
-			})
-
-			// ABOUT PAGE AND MULTIPLE NAMED VIEWS =================================
-			.state('about', {
-				url: '/about',
-				views: {
-					'': { templateUrl: 'templates/partial-about.html' },
-					'columnOne@about': { template: 'Look I am a column!' },
-					'columnTwo@about': {
-						templateUrl: 'templates/table-data.html',
-						controller: 'scotchController'
-					}
-				}
-
-			});
 
 		//fix this (remove) and remove base index.html
 		// $locationProvider.html5Mode(true);
@@ -62,7 +45,7 @@
 	});
 	
 	app.controller('rimsCtrl', function ($scope, $http) {
-		$http.get('json/rims_data.json').success(function(data) {
+		$http.get('application/assets/json/rims_data.json').success(function(data) {
 			$scope.data = data;
 		})
 
@@ -200,7 +183,7 @@
 	    
 	    // Тут много картинок с бехами https://bmw.inchcape.ru/2-serii/bmw-f22-cbu-220i-coupe/
 
-		$http.get('json/cars_data.json').success(function(data) {
+		$http.get('application/assets/json/cars_data.json').success(function(data) {
 			$scope.data = data;
 
 			//Для пагинации

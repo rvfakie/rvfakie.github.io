@@ -189,7 +189,7 @@
 				    
 		            src.html(randFirstWords);
 					setTimeout(function() {
-						(src.parents().hasClass('white')) ? src.html('Powered by <img src="images/m_logo_black.svg" alt="">') : src.html('Powered by <img src="images/m_logo.svg" alt="">');
+						(src.parents().hasClass('white')) ? src.html('Powered by <img src="application/assets/images/m_logo_black.svg" alt="">') : src.html('Powered by <img src="application/assets/images/m_logo.svg" alt="">');
 					}, 150);
 					setTimeout(function() {
 						src.html(randSecondWords);

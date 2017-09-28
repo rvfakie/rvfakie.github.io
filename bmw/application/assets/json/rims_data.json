@@ -1,7 +1,7 @@
 [
   {
     "name": "410",
-    "image": "images/rims/410.jpg",
+    "image": "application/assets/images/rims/410.jpg",
     "series": ["5 - Series", "6 - Series"],
     "bodies": ["F10", "F12"],
     "tech": [

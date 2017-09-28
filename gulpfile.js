@@ -28,6 +28,8 @@ gulp.task('serve', function () {
 
     gulp.watch('precompile/assets/stylesheets/*.scss', ['sass']);
     gulp.watch('application/**/*.html', browserSync.reload);
+    gulp.watch('application/**/*.html', browserSync.reload);
+    gulp.watch('./*.html', browserSync.reload);
     gulp.watch('application/**/*.js', browserSync.reload);
 });
 

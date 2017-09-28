@@ -4,21 +4,10 @@
 	    <title>TEST</title>
 	    <meta charset="UTF-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-		<!--<base href="/dist">-->
-	    <link href="css/font-awesome.min.css" rel="stylesheet">
-	    <link href="css/style.css" rel="stylesheet">
+		<script>(location.hostname === 'localhost') ? document.write('<base href="/">') : document.write('<base href="'+ location.pathname +'">');</script>
+	    <link href="application/components/stylesheets/font-awesome.min.css" rel="stylesheet">
+	    <link href="application/assets/stylesheets/application.css" rel="stylesheet">
 	    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js"></script>
-		<script type="text/javascript" src="js/plugins/angular-ui-router.js"></script>
-	    <script type="text/javascript" src="js/plugins/angular_ui_bootstrap.js"></script>
-		<script type="text/javascript" src="js/plugins/ang-mask.js"></script>
-	    <script type="text/javascript" src="js/plugins/toArrayFilter.js"></script>
-	    <script type="text/javascript" src="js/canvas.js"></script>
-	    <script type="text/javascript" src="js/db.js"></script>
-	    <script type="text/javascript" src="js/custom.js"></script>
-	    <script type="text/javascript" src="js/plugins/jquery.ikSelect.min.js"></script>
 	</head>
 	<body class="antialiasing" ng-app="myModule">
 		<div class="body-wrapper">
@@ -37,7 +26,7 @@
 					<li ui-sref-active="active" onclick="goToAction($(this))" data-href="main"><a href="#" ui-sref="cars">BMW</a></li>
 					<li ui-sref-active="active" onclick="goToAction($(this))" data-href="main"><a href="#" ui-sref="rims">Диски</a></li>
 				</ul>
-				<span class="right">Inspired by <img src="images/m_logo.svg" alt=""></span>
+				<span class="right">Inspired by <img src="application/assets/images/m_logo.svg" alt=""></span>
 				<a href="#main" class="mobile-action" onclick="easeMobile()">
 					<div class="mobile-btn">
 						<div class="line"></div>
@@ -57,11 +46,11 @@
 				<section class="welcome black">
 					<div class="video-over">
 						<div class="image-wrap">
-							<img src="images/bmw_logo.png" alt="">
+							<img src="application/assets/images/bmw_logo.png" alt="">
 						</div>
 					</div>
 					<video autoplay="autoplay" loop="loop">
-						<source src="videos/BMW%20M2.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+						<source src="application/assets/videos/BMW%20M2.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
 					</video>
 				</section>
 				<section class="white" id="main">
@@ -99,7 +88,17 @@
 
 
 			<div class="footer" id="footer">
-
+				<script src="application/components/javascript/jquery-2-2-2.min.js"></script>
+			    <script src="application/components/javascript/angular-1-5-5.min.js"></script>
+				<script src="application/components/javascript/angular-animate-1-5-5.min.js"></script>
+				<script src="application/components/javascript/angular-ui-router.js"></script>
+			    <script src="application/components/javascript/angular_ui_bootstrap.js"></script>
+				<script src="application/components/javascript/ang-mask.js"></script>
+			    <script src="application/components/javascript/toArrayFilter.js"></script>
+			    <script src="application/assets/javascript/canvas.js"></script>
+			    <script src="application/assets/javascript/db.js"></script>
+			    <script src="application/assets/javascript/custom.js"></script>
+			    <script src="application/components/javascript/jquery.ikSelect.min.js"></script>
 			</div>
 		</div>
 	</body>
