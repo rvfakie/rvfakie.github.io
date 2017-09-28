@@ -1,0 +1,538 @@
+<div ng-controller="carsCtrl" class="page {{ pageClass }}">
+	<div class="catcher">
+		<h2>Автомобили BMW</h2>
+	</div>
+	<div class="filter-block">
+		<div class="filter-caption" onclick="toggleFilters()">
+			Фильтры
+			<span ng-if="filterIsSelected()">: {{ filterIsSelected() }} </span>
+			<i class="fa fa-angle-down arrow"></i>
+		</div>
+		<div class="inputs-wrapper active clearfix">
+			<div class="input-block">
+				<div class="input-caption">Серия</div>
+				<select ng-model="series.serie" ng-change="filterSeriesSelectReset()" class="fk-picker">
+					<option value="">Все</option>
+					<option ng-repeat="(key, value) in data | orderBy: 'serie'" select-stylize-directive value="{{ value.serie }}">{{ value.serie }}</option>
+				</select>
+			</div>
+			<div class="input-block">
+				<div class="input-caption">Кузов</div>
+				<input type="text" class="car-body-input" placeholder="Введите кузов" ng-model="carbody.body" ng-change="checkCarBodyChange()">
+				<div class="input-reset" ng-click="filterTextInputReset()" ng-show="carbody.body.length">
+					<div class="line"></div>
+					<div class="line"></div>
+				</div>
+			</div>
+			<div class="input-block">
+				<input type="checkbox" id="m_power" class="m-power-input" ng-model="mPowerChecked" ng-change="toggleMPower()" ng-true-value="'M'" ng-false-value="undefined">
+				<label class="m-power" for="m_power"></label>
+			</div>
+			<div class="input-block right">
+				<div class="filter-reset" ng-if="filterIsSelected()" ng-click="allFiltersReset()">Сбросить фильтры</div>
+			</div>
+		</div>
+	</div>
+		<div class="car-info-menu">
+			<span>Навигация <img src="images/bmw_logo.png"><div class="model-caption" onclick="goToAction($(this)); closeMobileCarInfoMenu(this)" data-href="car_th_1" ng-repeat="(key, value) in carModel | toArray | filter:models">{{ value.model }}</div></span>
+			<ul>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_1" data-href="car_th_1">Описание</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_2" data-href="car_th_2">Общая информация</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_3" data-href="car_th_3">Эксплуатационные показатели</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_4" data-href="car_th_4">Размеры</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_5" data-href="car_th_5">Объем и масса</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_6" data-href="car_th_6">Подвеска и тормоза</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_7" data-href="car_th_7">Двигатель</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_8" data-href="car_th_8">Трансмиссия</a></li>
+				<li><a href="#" onclick="closeMobileCarInfoMenu(this); prevent(event); goToAction($(this))" class="capt car_th_9" data-href="car_th_9">Заправочные емкости</a></li>
+			</ul>
+		</div>
+	<div class="description clearfix">
+		<div class="close-description" onclick="closeCarInfo()">
+			<div class="line"></div>
+			<div class="line"></div>
+		</div>
+		<div class="img-wrap">
+			<img ng-src="{{ carImage }}" alt="">
+			<div class="stabilizer"></div>
+		</div>
+		<div class="desc-wrap">
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<th colspan="2" id="car_th_1">Описание</th>
+				</tr>
+				<tr>
+					<td>Серия</td>
+					<td>{{ carSerie }}</td>
+				</tr>
+				<tr>
+					<td>Кузов</td>
+					<td>{{ carBody }}</td>
+				</tr>
+				<tr>
+					<td>Модель</td>
+					<td>
+						<select class="fk-model" ng-model="models" ng-options="model_name.model for model_name in carModel | toArray | orderBy:'model'"></select>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_2">Общая информация</th>
+				</tr>
+				<tr>
+					<td>Начало производства</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.man_start }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Окончание производства</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.man_end }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Класс автомобиля</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.class }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Количество дверей</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.doors }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Количество мест</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.seats }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_3">Эксплуатационные показатели</th>
+				</tr>
+				<tr>
+					<td>Максимальная скорость, км/ч</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.max_speed }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Разгон до 100 км/ч, с</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.acceleration }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Расход топлива, л город/трасса/смешанный</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.fuel_consumption }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Марка топлива</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.fuel_type }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Экологический класс</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.eco_class }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Выбросы CO2, г/км</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.co2 }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_4">Размеры</th>
+				</tr>
+				<tr>
+					<td>Длина, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.length }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Ширина, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.width }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Высота, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.height }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Колёсная база, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.wheelbase }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Клиренс, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.clearance }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Ширина передней колеи, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.front_track }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Ширина задней колеи, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.rear_track }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Размер колес, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.wheel_size }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_5">Объем и масса</th>
+				</tr>
+				<tr>
+					<td>Объем багажника мин/макс, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.trunk_gauge }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Снаряженная масса, кг</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.curb_weight }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Полная масса, кг</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.full_weight }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_6">Подвеска и тормоза</th>
+				</tr>
+				<tr>
+					<td>Тип передней подвески</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.front_suspension }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Тип задней подвески</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.rear_suspension }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Передние тормоза</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.front_brakes }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Задние тормоза</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.rear_brakes }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_7">Двигатель</th>
+				</tr>
+				<tr>
+					<td>Номер двигателя</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.engine_number }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Тип двигателя</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.engine_type }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Расположение двигателя</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.engine_position }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Объем, см<sup>3</sup></td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.engine_volume }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Мощность, л.с./кВт при об/мин</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.power }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Максимальный крутящий момент, Н*м при об/мин</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.torque }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Турбонаддув</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.turbo }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Расположение цилиндров</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.cylinder_position }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Количество цилиндров</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.cylinder_quantity }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Число клапанов на цилиндр</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.valve_per_cylinder }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Система питания двигателя</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.power_supply }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Степень сжатия</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.compression_ratio }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Диаметр цилиндра и ход поршня, мм</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.bore_stroke }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_8">Трансмиссия</th>
+				</tr>
+				<tr>
+					<td>Тип КПП</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.gearbox_type }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Номер КПП</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.gearbox_number }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Количество передач</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.gear_quantity }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Тип привода</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.drive }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="2" id="car_th_9">Заправочные емкости</th>
+				</tr>
+				<tr>
+					<td>Объём топливного бака, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.fuel_capacity }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Масло в двигатель, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.engine_oil }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Масло в КПП, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.gearbox_oil }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Масло для заднего моста, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.rearAxle_oil }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Антифриз с кондиционером, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.antifreeze_c }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Антифриз без кондиционера, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.antifreeze_n }}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Тормозная жидкость, л</td>
+					<td>
+						<div ng-repeat="(key, value) in carModel | toArray | filter:models">
+							{{ value.brake_fluid }}
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="item-block flex">
+		<div class="item catch" ng-repeat="(key, value) in filterData = (data | filter:series | filter:carbody | orderBy:'serie') | limitTo:16:16*(page-1)" onclick="openCarInfo(this)" ng-click="choose(value)">
+			<div class="item-wrapper">
+				<img ng-src="{{ value.image }}">
+				<div class="stabilizer"></div>
+				<div class="bottom"><span class="serie" ng-hide="value.serie.charAt(0) === 'M'">{{ value.serie }} -</span> {{ value.body }}</div>
+			</div>
+		</div>
+		<div class="pagination-wrapper">
+			<pagination
+					ng-model="page"
+					total-items="filterData.length"
+					max-size="5"
+					items-per-page="16">
+			</pagination>
+			<!-- boundary-links="true" -->
+		</div>
+	</div>
+	<script>
+		$(window).on('scroll', function() {
+			stickMenu();
+			for (var i = 1; i < 10; i++) {
+				var est = $('.car-info-menu a.car_th_' + [i]);
+				if ($(window).scrollTop() >= $('#car_th_' + [i]).offset().top - $('.header').innerHeight()) {
+					$('.car-info-menu a').removeClass('active');
+					est.addClass('active');
+				} else {
+					est.removeClass('active');
+				}
+			}
+		})
+		h2rekt();
+	</script>
+</div>

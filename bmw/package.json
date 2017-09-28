@@ -1,0 +1,29 @@
+{
+  "name": "rvfakie.github.io",
+  "version": "1.0.0",
+  "description": "BMW information project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvfakie/rvfakie.github.io.git"
+  },
+  "keywords": [
+    "BMW"
+  ],
+  "author": "Roman Volchkov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rvfakie/rvfakie.github.io/issues"
+  },
+  "homepage": "https://github.com/rvfakie/rvfakie.github.io#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-util": "^3.0.8"
+  }
+}

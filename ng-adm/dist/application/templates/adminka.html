@@ -1,0 +1,246 @@
+<div class="panel-popup-wrapper">
+    <div class="panel-popup panel-agree-delete">
+        <div class="agree">OK</div>
+        <div class="decline">NO</div>
+    </div>
+</div>
+
+<form>
+    <div class="breadcrumbs">
+        <a href="javascript:;" ui-sref="/">Главная страница</a><span> » </span><span>Админка</span>
+    </div>
+    <h2>Админка</h2>
+    <div class="btns-row clearfix">
+        <!--<button class="fk-btn drop_bottom box-shadow move-right-15">Action button</button>-->
+        <div class="right-side">
+            <button class="fk-btn drop_bottom box-shadow" ng-click="addPartition(); checkCategoryListLength(this)" ng-show="!search_category.name">Добавить категорию</button>
+            <button class="fk-btn drop_bottom box-shadow" ng-class="{'active': preferencesActive}" ng-click="togglePreferences()">Настройки</button>
+        </div>
+        <div class="wide-overfloat-block drop_bottom box-shadow">
+            <input type="text" class="category_search" placeholder="Поиск по категориям" ng-model="search_category.name">
+        </div>
+    </div>
+    <div class="items-wrapper">
+        <div class="options box-shadow" ng-class="{'active': preferencesActive}">
+            <h2>Настройки</h2>
+            <h3>Все товары</h3>
+            <div class="options-row">
+                <div class="options-content">
+                    <div class="options-header" ng-class="{'discount-active-font-color': sale.enabled}">Скидка</div>
+                    <div class="options-values clearfix">
+                        <div class="options-block">
+                            <span>Скидка на распродажу</span>
+                            <input type="number" ng-class="{'discount-active-font-color': sale.enabled}" placeholder="Скидка" ng-model="sale.value" ng-change="checkDiscountValue(sale.value, sale)">
+                            <div class="options-discount-ending">%</div>
+                        </div>
+                        <div class="options-block">
+                            <span>Включить распродажу</span>
+                            <input type="checkbox" ng-model="sale.enabled" ng-disabled="!sale.value">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3>Категории</h3>
+            <div class="options-row">
+                <div class="options-content">
+                    <div class="options-header" ng-class="{'discount-active-font-color':ddSelectSelected.cat_discount[0].enabled && !sale.enabled}">Скидка</div>
+                    <div class="options-values clearfix">
+                        <div class="options-block">
+                            <span>Категория</span>
+                            <div dropdown-select="ddSelectOptions" dropdown-model="$root.ddSelectSelected" dropdown-item-label="name">
+                            </div>
+                        </div>
+                        <div class="options-block">
+                            <span>Скидка на категорию</span>
+                            <input type="number" ng-class="{'discount-active-font-color':ddSelectSelected.cat_discount[0].enabled && !sale.enabled}" placeholder="Скидка" ng-model="ddSelectSelected.cat_discount[0].value" ng-change="checkDiscountValue(ddSelectSelected.cat_discount[0].value, ddSelectSelected.cat_discount[0])">
+                            <div class="options-discount-ending">%</div>
+                        </div>
+                        <div class="options-block">
+                            <span>Включить скидку на категорию</span>
+                            <input type="checkbox" ng-model="ddSelectSelected.cat_discount[0].enabled" ng-disabled="!ddSelectSelected.cat_discount[0].value || sale.enabled">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="partition-row box-shadow" ng-repeat="(key, value) in filterCat = (categories | filter:search_category) | limitTo:5:5*(catPage-1)">
+            <div class="partition-header">
+                <input type="text" placeholder="Название категории" class="partition-name" ng-model="value.name">
+            </div>
+            <div class="partition-info-row clearfix">
+                <div class="info-row-number">№</div>
+                <input class="wider" type="text" placeholder="Название" ng-model="search_item.name">
+                <!-- <input type="text" placeholder="Цена" ng-model="search.price"> -->
+                <div>Цена</div>
+                <div>Скидка</div>
+                <div class="wider">Откуда скидка</div>
+            </div>
+            <div class="item-row clearfix" ng-class="{item_row_first:$first, item_row_last:$last}" ng-class-odd="'item-row-odd'" ng-class-even="'item-row-even'" ng-repeat="key2 in filterData = (value.items | filter:search_item) | limitTo:10:10*(itemPage-1)">
+                <div class="item-common-values clearfix" onclick="showNextSibling(event, this)">
+                    <span class="row-number">{{getRowNumber(key2, value.items)}}.</span>
+                    <span class="row-span wider" ng-show="key2.name">{{key2.name}}</span>
+                    <span class="row-span wider" ng-if="!key2.name">Название</span>
+                    <span class="row-span" ng-show="key2.price">{{calculatePrice(key2, value)}}</span>
+                    <span class="row-span" ng-if="!key2.price">Цена</span>
+                    <span class="row-span discount-color" ng-if="calculateDiscount(key2, value)">{{calculateDiscount(key2, value)}}</span>
+                    <span class="row-span wider" ng-if="showDiscountInitiator(key2, value)">{{showDiscountInitiator(key2, value)}}</span>
+
+                    <span class="remove-item-row" ng-click="removeRow(value, key2)">Удалить строку</span>
+                </div>
+                <div class="item-values-wrap">
+                    <div class="item-values-row">
+                        <div class="item-values clearfix">
+                            <div class="item-values-block full-wide">
+                                <span>Название</span>
+                                <input type="text" placeholder="Название" ng-model="key2.name" ng-change="initCustomSelect()">
+                            </div>
+                        </div>
+                        <div class="item-values clearfix">
+                            <div class="item-values-block">
+                                <span>Цена</span>
+                                <input type="number" placeholder="Цена" ng-model="key2.price" ng-change="checkItemDiscountValue(key2)">
+                            </div>
+                            <div class="item-values-block">
+                                <span>Скидка</span>
+                                <input type="number" placeholder="Скидка" ng-model="key2.discount_value" ng-change="checkItemDiscountValue(key2)" ng-disabled="!key2.price">
+                                <div class="item-value-discount-ending" ng-if="!key2.discount_currency && key2.discount_enabled">%</div>
+                                <div class="item-value-discount-ending" ng-if="key2.discount_currency && key2.discount_enabled">руб.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-values clearfix">
+                        <div class="item-values-block">
+                            <span class="span-block">Изображения</span>
+                            <div class="item-image-wrap" ng-repeat="image in key2.image">
+                                <img ng-src="{{image.value}}" on-error-src="application/assets/images/image_not_found.svg">
+                                <div class="image-fader"><span ng-click="removeImage(image, key2.image)">Удалить</span></div>
+                            </div>
+                            <br>
+                            <div class="fake-add-file box-shadow">
+                                <input type="file" accept="image/jpeg,image/png" ng-upload-change="fileChanged($event, base, key2.image)">
+                                Добавить изображение
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-values clearfix">
+                        <div class="item-values-block full-wide">
+                            <span>Описание</span>
+                            <textarea placeholder="Описание" ng-model="value.description"></textarea>
+                        </div>
+                    </div>
+                    <div class="item-info">
+                        <h3>Дополнительно</h3>
+                    </div>
+                    <div class="item-values clearfix">
+                        <div class="item-values-block item-property">
+                            <span>Цвета</span>
+                            <div class="sizes-wrap clearfix" ng-repeat="key3 in key2.color" ng-class="{size_first:$first, size_last:$last}">
+                                <input type="text" placeholder="Цвет" ng-model="key3.name">
+                                <div class="delete-item-property" ng-click="deleteProperty(key3, key2.color)"><i class="fa fa-trash"></i></div>
+                            </div>
+                            <div class="add-property" ng-click="addProperty(key2.color)">+</div>
+                        </div>
+                        <div class="item-values-block item-property">
+                            <span>Размеры</span>
+                            <div class="sizes-wrap clearfix" ng-repeat="key3 in key2.size" ng-class="{size_first:$first, size_last:$last}">
+                                <input type="text" placeholder="Размер" ng-model="key3.name">
+                                <div class="delete-item-property" ng-click="deleteProperty(key3, key2.size)"><i class="fa fa-trash"></i></div>
+                            </div>
+                            <div class="add-property property-size" ng-click="addProperty(key2.size)">+</div>
+                        </div>
+                        <div class="item-values-block item-property">
+                            <span>Подкатегории</span>
+                            <div class="sizes-wrap clearfix" ng-repeat="key3 in key2.filter" ng-class="{size_first:$first, size_last:$last}">
+                                <input type="text" placeholder="Размер" ng-model="key3.name" ng-change="key3.value = key3.name">
+                                <div class="delete-item-property" ng-click="deleteProperty(key3, key2.filter)"><i class="fa fa-trash"></i></div>
+                            </div>
+                            <div class="add-property property-size" ng-click="addProperty(key2.filter, true)">+</div>
+                        </div>
+                    </div>
+                    <div class="item-info">
+                        <h3 class="push-top-22">Настройки</h3>
+                    </div>
+                    <div class="item-values clearfix">
+                        <div class="item-values-block" ng-if="!key2.disable_discount">
+                            <span>Скидка</span>
+                            <input type="checkbox" ng-model="key2.discount_enabled" ng-change="key2.override_sale = false; checkItemDiscountValue(key2)">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                        <div class="item-values-block" ng-if="key2.discount_enabled">
+                            <span>Скидка в валюте</span>
+                            <input type="checkbox" ng-model="key2.discount_currency" ng-disabled="key2.discount_value >= 100" ng-change="checkItemDiscountValue(key2)">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                        <div class="item-values-block" ng-if="sale.enabled && key2.discount_value && !key2.disable_discount && key2.discount_enabled || value.cat_discount[0].enabled && key2.discount_value && !key2.disable_discount && key2.discount_enabled">
+                            <span>Перебить все скидки</span>
+                            <input type="checkbox" ng-model="key2.override_sale">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                        <div class="item-values-block" ng-if="sale.enabled && !key2.discount_enabled || value.cat_discount[0].enabled && !key2.discount_enabled">
+                            <span>Отменить скидки</span>
+                            <input type="checkbox" ng-model="key2.disable_discount">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                    </div>
+                    <div class="item-values clearfix">
+                        <div class="item-values-block">
+                            <span>Включить выбор цветов</span>
+                            <input type="checkbox" ng-model="key2.color_enabled" ng-disabled="key2.color == ''">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                        <div class="item-values-block">
+                            <span>Включить выбор размеров</span>
+                            <input type="checkbox" ng-model="key2.size_enabled" ng-disabled="key2.size == ''">
+                            <div class="fake-checkbox"><i class="fa fa-check"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="fk-btn box-shadow add-row" ng-click="addRow(value); checkItemListLength(this)" ng-show="!search_item.name">Добавить строку</button>
+
+            <div class="pagination-wrapper">
+                <pagination
+                    ng-show="numPages > 1"
+                    ng-model="itemPage"
+                    num-pages="numPages"
+                    total-items="filterData.length"
+                    max-size="5"
+                    items-per-page="10"
+                    first-text="Первая"
+                    last-text="Последняя">
+                </pagination>
+                <!-- boundary-links="true" -->
+            </div>
+
+            <div class="delete-partition" ng-click="removePartition(categories, key)">del</div>
+        </div>
+    </div>
+    <div class="pagination-wrapper clearfix">
+        <!--<div class="inline-block">-->
+            <!--<div class="fk-pagination box-shadow">-->
+                <!--<a class="angle-left"><i class="fa fa-angle-left"></i></a>-->
+                <!--<span>1</span>-->
+                <!--<a href="#">2</a>-->
+                <!--<span class="dotz">...</span>-->
+                <!--<a href="#">10</a>-->
+                <!--<a class="angle-right"><i class="fa fa-angle-right"></i></a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <pagination
+            ng-show="numPages > 1"
+            ng-model="catPage"
+            num-pages="numPages"
+            total-items="filterCat.length"
+            max-size="5"
+            items-per-page="5"
+            first-text="Первая"
+            last-text="Последняя">
+        </pagination>
+        <div class="right-side">
+            <a href="javascript:;" id="downloadAnchorElem"><button class="fk-btn box-shadow proceed" ng-click="save()">Accept changes</button></a>
+        </div>
+    </div>
+</form>

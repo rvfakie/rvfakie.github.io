@@ -1,0 +1,40 @@
+
+<div class="breadcrumbs">
+    <a href="javascript:;" ui-sref="/">Главная страница</a>
+    <span> » </span>
+    <a href="" ui-sref="categories">Категории</a>
+    <span> » </span>
+    <a ng-href="/categories/{{transliterate( category.name ).toLowerCase()}}" ng-bind="category.name"></a>
+    <span> » </span>
+    <span ng-bind="item.name"></span>
+</div>
+<h2>Товар</h2>
+<div class="btns-row clearfix">
+</div>
+
+<div class="preview-wrapper">
+    <div class="preview-menu box-shadow">
+        <input type="text" class="preview-menu-cat-search" ng-model="menuFilter.name" placeholder="Поиск по категориям">
+        <a class="preview-menu-list preview-menu-header" ui-sref="categories">
+            Категории
+        </a>
+        <a class="preview-menu-list" ng-repeat="key in categories | filter:menuFilter" ng-href="/categories/{{transliterate(key.name).toLowerCase()}}">
+            {{key.name}}
+        </a>
+    </div>
+
+    <div class="preview-category">
+        <h2 class="preview-header">{{item.name}}</h2>
+        <div class="preview-flex">
+            <a class="preview-item-wrap">
+                <div class="preview-item clearfix">
+                    <div class="preview-discount" ng-if="calculateDiscount(item, category)">{{calculateDiscount(item, category)}}</div>
+                    <h2>{{item.name}}</h2>
+                    <img ng-src="{{item.image[0].value}}">
+                    <div class="preview-add-to-cart fk-btn proceed">В корзину</div>
+                    <div class="preview-price">{{calculatePrice(item, category)}} руб.</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+[
+  {
+    "name": "410",
+    "image": "images/rims/410.jpg",
+    "series": ["5 - Series", "6 - Series"],
+    "bodies": ["F10", "F12"],
+    "tech": [
+      {
+        "size": "8.5x20",
+        "model": "5 - Series F10",
+        "use": "front",
+        "et": "ET 33",
+        "weight": "16.47"
+      },
+      {
+        "size": "8.5x20",
+        "model": "6 - Series F12",
+        "use": "front",
+        "et": "ET 33",
+        "weight": "16.47"
+      }
+    ]
+  }
+]

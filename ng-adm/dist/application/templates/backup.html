@@ -1,0 +1,8 @@
+<select ng-model="$root.category_name" ng-init="$root.category_name = categories[0]" ng-options="k.name for k in categories"></select>
+
+<input type="number" placeholder="Скидка" ng-model="category_name.cat_discount[0].value" ng-change="checkDiscountValue(category_name.cat_discount[0].value, category_name.cat_discount[0])">
+
+<!-- вкл скидку -->
+<input type="checkbox" ng-model="category_name.cat_discount[0].enabled" ng-disabled="category_name.cat_discount[0].value == '' || category_name.cat_discount[0].value == undefined">
+
+//$scope.$root.category_name = categories[0]

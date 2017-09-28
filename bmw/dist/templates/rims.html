@@ -1,0 +1,107 @@
+<div ng-controller="rimsCtrl" class="page {{ pageClass }}">
+	<div class="catcher">
+		<h2>Диски BMW</h2>
+	</div>
+	<div class="filter-block">
+		<div class="filter-caption" onclick="toggleFilters()">
+			Фильтры
+			<span ng-if="filterIsSelected()">: {{ filterIsSelected() }} </span>
+			<i class="fa fa-angle-down arrow"></i>
+		</div>
+		<div class="inputs-wrapper active clearfix">
+			<div class="input-block">
+				<div class="input-caption">Серия</div>
+				<select ng-model="series.series" ng-change="filterSeriesSelectReset()" class="fk-picker">
+					<option value="">Все</option>
+					<option ng-repeat="key in seri" select-stylize-directive value="{{ key }}">{{ key }}</option>
+				</select>
+			</div>
+			<div class="input-block">
+				<div class="input-caption">Кузов</div>
+				<input type="text" ng-model="bodies.bodies" ng-change="checkCarBodyChange()" class="car-body-input" placeholder="Введите кузов">
+				<div class="input-reset" ng-click="filterCarBodyReset()" ng-show="bodies.bodies.length">
+					<div class="line"></div>
+					<div class="line"></div>
+				</div>
+			</div>
+			<div class="input-block">
+				<div class="input-caption">Стиль</div>
+				<input type="text" ng-model="styles.name" ng-change="checkRimStyleChange()" class="car-body-input" placeholder="Введите стиль">
+				<div class="input-reset" ng-click="filterRimStyleReset()" ng-show="styles.name.length">
+					<div class="line"></div>
+					<div class="line"></div>
+				</div>
+			</div>
+			<div class="input-block right">
+				<div class="filter-reset" ng-click="allFiltersReset()" ng-if="filterIsSelected()">Сбросить фильтры</div>
+			</div>
+		</div>
+	</div>
+	<div class="description clearfix">
+		<div class="close-description" onclick="closeCarInfo()">
+			<div class="line"></div>
+			<div class="line"></div>
+		</div>
+		<div class="img-wrap">
+			<img ng-src="{{ rimImage }}" alt="">
+			<div class="stabilizer"></div>
+		</div>
+		<div class="desc-wrap rims">
+			<table>
+					<tr>
+						<th>Модель</th>
+						<th>Размер</th>
+						<th>Расположение</th>
+						<th>Вылет</th>
+						<th>Вес</th>
+					</tr>
+					<tr ng-repeat="(key, value) in rimTech">
+						<td>{{ value.model }}</td>
+						<td>{{ value.size }}</td>
+						<td>{{ value.use }}</td>
+						<td>{{ value.et }}</td>
+						<td>{{ value.weight }}</td>
+					</tr>
+			</table>
+		</div>
+	</div>
+	<div class="item-block flex">
+		<div class="item catch" ng-repeat="(key, value) in filterData = (data | filter:series | filter:bodies | filter:styles)" ng-click="choose(value)" onclick="openCarInfo(this)">
+			<div class="item-wrapper">
+				<img ng-src="{{ value.image }}">
+				<div class="stabilizer"></div>
+				<div class="bottom">
+					<span class="serie">{{ value.name }}</span>
+					<!--<span ng-repeat="key in value.bodies">{{ key }}</span>-->
+				</div>
+			</div>
+		</div>
+		<div class="pagination-wrapper">
+			<!--<pagination-->
+					<!--ng-model="page"-->
+					<!--total-items="filterData.length"-->
+					<!--max-size="5"-->
+					<!--items-per-page="16">-->
+			<!--</pagination>-->
+			<!-- boundary-links="true" -->
+		</div>
+	</div>
+	<script>
+		$(window).unbind('scroll');
+
+		$(window).on('scroll', function() {
+			if ( $(window).scrollTop() - ($('.image-wrap').height() - 39) >= $('.image-wrap').offset().top ) {
+				$('.header').addClass('fixed');
+				outta = true;
+			} else {
+				$('.header').removeClass('fixed');
+				headUp();
+				outta = false;
+			}
+		})
+
+		closeCarInfo();
+		h2rekt();
+
+	</script>
+</div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <title>Groozin | Панель администратора</title>
+	    <meta charset="UTF-8">
+		<base href="/">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <link href="application/components/stylesheets/font-awesome.min.css" rel="stylesheet">
+		<link href="application/components/stylesheets/angular-dropdowns.min.css" rel="stylesheet">
+	    <link href="application/assets/stylesheets/application.css" rel="stylesheet">
+	</head>
+	<body class="antialiased" ng-app="applicationModule" ng-controller="dataCtrl">
+		
+    	<div class="header">
+	    	<ul class="main">
+		    	<li class="stabilizer"></li>
+		    	<li class="header-divs logo">
+		    		<a href="/"><img src="application/assets/images/logo_support_admin.svg" alt=""></a>
+		    	</li>
+		    	<li class="header-divs logo-text">top adminka eu</li>
+		    	<li class="header-divs right-side header-block"><i class="fa fa-cog"></i></li>
+		    	<li class="header-divs right-side header-text"><a href="#">sign in | sign up</a></li>
+			</ul>
+    	</div>
+    	<div class="sub-header">
+	    	<ul class="sub">
+		    	<li><a href="javascript:;" ui-sref="adminka">Админка</a></li>
+				<li><a href="javascript:;" ui-sref="categories">Предпросмотр</a></li>
+	    	</ul>
+    	</div>
+
+		<div class="content clearfix">
+			<!-- inject place -->
+			<div ui-view></div>
+			<!-- -->
+		</div>
+
+		<div class="footer">
+			<div class="clearfix">
+				<div class="half right">
+					<img class="logo" src="application/assets/images/logo_support_admin-hollow.svg">
+				</div>
+			</div>
+			<p>fakie.com | fakie : all rights reserved.</p>
+			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+			<script src="application/components/javascript/ang-mask.js"></script>
+			<script src="application/components/javascript/angular-ui-router.js"></script>
+			<script src="application/components/javascript/angular_ui_bootstrap.js"></script>
+			<script src="application/components/javascript/angular-dropdowns.min.js"></script>
+			<script src="application/components/javascript/toArrayFilter.js"></script>
+			<script src="application/assets/javacript/application.js"></script>
+			<script src="application/assets/javacript/mechanics.js"></script>
+		</div> 
+		   
+	</body>
+</html>
