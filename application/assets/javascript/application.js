@@ -58,8 +58,16 @@
     
     app.controller('indexCtrl', function ($scope, $rootScope, $state, $timeout, $interval) {
 
+        $scope.fastShow = function() {
+            showAction(false);
+            $scope.usedTools = $scope.toolsQuery;
+            $('.tools-wrapper').addClass('hard-shown');
+            $('.tools').addClass('hard-hidden');
+            $('.fast-load').addClass('hidden');
+        };
+
         $scope.toolsText = ['tools', '.', 'push', '(', ')', ';'];
-        $scope.toolsQuery = ['javascript', 'angular', 'css3', 'html5'];
+        $scope.toolsQuery = ['javascript', 'css3', 'html5', 'angular', 'jquery', 'nodejs', 'npm', 'gulp', 'sass', 'less'];
         $scope.usedTools = [];
         var len = 0;
         
@@ -68,12 +76,11 @@
             $timeout(function() {
                 if (bool === false) {
                     clearInterval(inter);
-                    console.log('clearing interval')
                     return;
                 }
-                console.log('tes')
 
                 textAction();
+                $('.fast-load').removeClass('hidden');
 
                 inter = setInterval(function() {
                     textAction();
@@ -88,10 +95,8 @@
           return Math.floor(Math.random() * (max - min + 1)) + min;
         };
         textAction = function() {
-            //$('.tools-wrapper').removeClass('shown');
             $('.tools').removeClass('hidden');
             $('.tools').html('');
-            console.log(len)
             if (len === $scope.toolsQuery.length) {
                 len = 0;
                 $scope.usedTools = [];
