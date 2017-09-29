@@ -28,13 +28,8 @@
 				templateUrl: 'application/templates/cars.html'
 			})
 
-			// .state('cars', {
-			// 	url: '/cars',
-			// 	templateUrl: 'templates/cars.html'
-			// })
-
 			.state('rims', {
-				url: '/rims',
+				url: '/',
 				templateUrl: 'application/templates/rims.html'
 			})
 

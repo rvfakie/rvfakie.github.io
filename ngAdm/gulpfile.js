@@ -7,12 +7,12 @@ var prefix = require('gulp-autoprefixer');
 var browserSync = require('browser-sync');
 
 gulp.task('sass', function() {
-    gulp.src('app/assets/stylesheets/*.scss')
+    gulp.src('precompile/assets/stylesheets/*.scss')
         .pipe(sass().on('error', gutil.log))
         .pipe(prefix({
             browsers: ['last 2 version', 'safari 5', 'ie 6', 'ie 7', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4']
         }))
-        .pipe(gulp.dest('dist/application/assets/stylesheets'))
+        .pipe(gulp.dest('application/assets/stylesheets'))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -21,13 +21,14 @@ gulp.task('sass', function() {
 gulp.task('serve', function () {
     browserSync.init(null, {
         server: {
-            baseDir: 'dist',
+            baseDir: "./",
             middleware: [ historyApiFallback() ]
         }
     });
 
-    gulp.watch('app/assets/stylesheets/*.scss', ['sass']);
-    gulp.watch('dist/**/*.html', browserSync.reload);
-    gulp.watch('dist/**/*.js', browserSync.reload);
+    gulp.watch('precompile/assets/stylesheets/*.scss', ['sass']);
+    gulp.watch('application/**/*.html', browserSync.reload);
+    gulp.watch('./**/*.html', browserSync.reload);
+    gulp.watch('application/**/*.js', browserSync.reload);
 });
 

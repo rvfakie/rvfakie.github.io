@@ -124,7 +124,7 @@
     });
      
     app.controller('dataCtrl', function($scope, $http, $rootScope, $state, $timeout) {
-        $http.get('application/data/json/data.json').success(function(data) {
+        $http.get('application/assets/json/data.json').success(function(data) {
             $rootScope.categories = data.categories;
             $scope.sale = data.sale[0];
             $scope.data = data;
