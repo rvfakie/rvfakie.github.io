@@ -3,7 +3,7 @@
 	<head>
 	    <title>Панель администратора</title>
 	    <meta charset="UTF-8">
-		<base href="/">
+		<script>(location.hostname === 'localhost') ? document.write('<base href="/">') : document.write('<base href="'+ location.pathname +'">');</script>
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	    <link href="application/components/stylesheets/font-awesome.min.css" rel="stylesheet">
 		<link href="application/components/stylesheets/angular-dropdowns.min.css" rel="stylesheet">
