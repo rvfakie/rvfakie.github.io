@@ -50,11 +50,12 @@
 
             .state('/', {
                 url: '/',
-                templateUrl: 'application/templates/index.html'
+                templateUrl: 'application/templates/index.html',
             })
             .state('categories', {
                 url: '/categories',
-                templateUrl: 'application/templates/categories.html'
+                templateUrl: 'application/templates/categories.html',
+                urlForNormalHost: ''
             })
             .state('adminka', {
                 url: '/adminka',
