@@ -18,9 +18,9 @@
                 templateUrl: 'application/templates/about.html',
                 controller: 'indexCtrl'
             })
-            .state('browse', {
+            .state('projects', {
                 url: '/',
-                templateUrl: 'application/templates/browse.html',
+                templateUrl: 'application/templates/projects.html',
                 controller: 'browseCtrl'
             })
 
@@ -54,6 +54,29 @@
 
     app.controller('browseCtrl', function ($scope, $rootScope, $state, $timeout, $interval) {
         showAction(false);
+        $scope.projects = [
+            {
+                name: 'GMaps editor',
+                description: 'desc',
+                short_description: 'short desc',
+                image: 'application/assets/images/projects/gmaps.jpg',
+                link: 'https://rvfakie.github.io/gmaps'
+            },
+            {
+                name: 'BMW tech database',
+                description: 'desc',
+                short_description: 'short desc',
+                image: 'application/assets/images/projects/bmw.jpg',
+                link: 'https://rvfakie.github.io/bmw'
+            },
+            {
+                name: 'The Village and Airbnb',
+                description: 'desc',
+                short_description: 'short desc',
+                image: 'application/assets/images/projects/airbnb.jpg',
+                link: 'http://specials.the-village.ru/airbnb'
+            }
+        ]
     })
     
     app.controller('indexCtrl', function ($scope, $rootScope, $state, $timeout, $interval) {
@@ -67,8 +90,9 @@
         };
 
         $scope.toolsText = ['tools', '.', 'push', '(', ')', ';'];
-        $scope.toolsQuery = ['javascript', 'css3', 'html5', 'angular', 'jquery', 'nodejs', 'npm', 'gulp', 'sass', 'less'];
+        $scope.toolsQuery = ['javascript', 'css3', 'html5', 'angular', 'jquery', 'gmaps', 'nodejs', 'npm', 'git', 'gulp', 'sass', 'less'];
         $scope.usedTools = [];
+
         var len = 0;
         
         

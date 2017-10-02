@@ -1,0 +1,10 @@
+<div class="heading-wrap flex-start post-start">
+	<div class="large-heading">Projects</div>
+</div>
+<div class="grid-container grid-view">
+	<div class="external-link" ng-repeat="key in projects" ng-click="redirectToExternalUrl(key.link)">
+		<div class="grid-item-background" ng-style="{'background-image':'url('+key.image+')'}"></div>
+		<div class="grid-item-title">{{key.name}}</div>
+		<div class="grid-item-description">{{key.short_description}}</div>
+	</div>
+</div>

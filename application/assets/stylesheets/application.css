@@ -231,6 +231,10 @@ a {
     background: url("../images/npm-img.png"); }
   .tool.tool-jquery {
     background: url("../images/jquery-img.png"); }
+  .tool.tool-gmaps {
+    background: url("../images/gmaps-img.png"); }
+  .tool.tool-git {
+    background: url("../images/git-img.png"); }
 
 .fast-load {
   position: absolute;
@@ -272,8 +276,7 @@ a {
     width: 100%;
     height: 100%; }
   .tools-wrapper {
-    position: relative;
-    height: 180px; }
+    position: relative; }
   .tool {
     width: 50px;
     height: 50px; }

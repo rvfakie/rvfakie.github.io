@@ -233,6 +233,12 @@ $headerBorder: 2px;
 	&.tool-jquery {
 		background: url('../images/jquery-img.png');
 	}
+	&.tool-gmaps {
+		background: url('../images/gmaps-img.png');
+	}
+	&.tool-git {
+		background: url('../images/git-img.png');
+	}
 }
 .fast-load {
 	position: absolute;
@@ -282,7 +288,6 @@ $headerBorder: 2px;
 	}
 	.tools-wrapper {
 		position: relative;
-		height: 180px;
 	}
 	.tool {
 		width: 50px;
