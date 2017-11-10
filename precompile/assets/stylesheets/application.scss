@@ -9,6 +9,7 @@ body, html {
 	box-sizing: border-box;
 	height: 100%;
 	font-family: "Proxima Nova", sans-serif;
+	//font-family: "Open Sans", sans-serif;
 }
 a {
 	color: inherit;
@@ -56,6 +57,7 @@ a {
 	src: url("../fonts/proximanova-bold/proximanova-bold.woff");
 }
 @import url('https://fonts.googleapis.com/css?family=Bowlby+One+SC');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 $headerHeight: 52px;
 $headerBorder: 2px;

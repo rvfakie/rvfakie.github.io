@@ -112,8 +112,8 @@
       .grid-container.grid-view > div:hover .grid-item-title, .grid-container.grid-view > div:hover .grid-item-description {
         opacity: 1; }
       .grid-container.grid-view > div:hover .grid-item-background {
-        -webkit-filter: blur(2px) brightness(0.5);
-                filter: blur(2px) brightness(0.5); }
+        -webkit-filter: brightness(0.5);
+                filter: brightness(0.5); }
 
 .heading-wrap {
   display: -webkit-box;
